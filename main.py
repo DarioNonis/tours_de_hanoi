@@ -36,6 +36,7 @@ def verifVictoire(plateau, n):
 
 plateau_ord_org = (-300, -200)
 speed(4000)
+title("Tours de Hanoï")
 
 def rectangle(x, y, longueur, largeur, couleur="black"):      # Départ du rectangle du coin supérieur gauche !
     up()
@@ -50,7 +51,7 @@ def rectangle(x, y, longueur, largeur, couleur="black"):      # Départ du recta
 
 def dessine_plateau(n):
     # On dessine la base
-    rectangle(0, 0, 60 + 3*(40 + (n-1)*30), 20)
+    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)
 
     # On dessine les n disques sur la première tour
     x, y = 20, 20
@@ -66,14 +67,19 @@ def dessine_plateau(n):
     longueur, largeur = 6, 20
     for i in range(3):
         rectangle(x, y, longueur, largeur)
-        x += 60 + n*20
+        x += 30 + (n*10) + n*20
         largeur = (n+1)*20
 
-    rectangle(170, 20, 120, 20)
-    rectangle(310, 20, 120, 20)
+    # rectangle(120, 20, 70, 20)
+    # rectangle(170, 20, 70, 20)
 
-plato = [[], [5], [4, 3, 2, 1]]
+    decalage_milieu = 80 + ((n-1)*30)
+
+    rectangle(decalage_milieu, 20, 40 + ((n-1)*30), 20)
+    rectangle(decalage_milieu*2-20, 20, 40 + ((n-1)*30), 20)
+
+# plato = [[], [5], [4, 3, 2, 1]]
 # print(verifVictoire(plato, 5))
 
-dessine_plateau(4)
+dessine_plateau(3)
 done()
