@@ -38,48 +38,57 @@ plateau_ord_org = (-300, -200)
 speed(4000)
 title("Tours de Hanoï")
 
-def rectangle(x, y, longueur, largeur, couleur="black"):      # Départ du rectangle du coin supérieur gauche !
+def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
     up()
-    goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)      # Coordonnées du point supérieur gauche
+    goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)        # Coordonnées du point supérieur gauche
     down()
     color(couleur)
+    fillcolor("white")                                          # On remplit le rectangle de blanc pour éviter de devoir
+    begin_fill()                                                # effacer la tour qui se trouve derrière.
     for i in range(2):
         forward(longueur)
         right(90)
         forward(largeur)
         right(90)
+    end_fill()
 
-def dessine_plateau(n):
+    # La boucle pourrait être remplacée par :
+
+    # goto(plateau_ord_org[0] + x + longueur, plateau_ord_org[1] + y)
+    # goto(plateau_ord_org[0] + x + longueur, plateau_ord_org[1] + y - largeur)
+    # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y - largeur)
+    # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)
+
+    # et ce serait UN PEU plus rapide
+
+def dessinePlateau(n):
     # On dessine la base
-    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)
-
-    # On dessine les n disques sur la première tour
-    x, y = 20, 20
-    longueur, largeur = 40 + (n-1)*30, 20
-    for i in range(n):  
-        rectangle(x, y, longueur, largeur)
-        x += 15
-        y += 20
-        longueur -= 30
+    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)     # la longueur est déterminée en fonction de n disques
     
     # On dessine les tours
-    x, y = 37 + (n-1)*15, (n+1)*20
-    longueur, largeur = 6, 20
+    x = 37 + (n-1)*15                               # le 37 ici sert juste à centrer la tour (qui est de largeur 6) 
+    y = (n+1)*20                                    # Rappel : les coordonnées ont pour origine le coin supérieur gauche de la base (0, 0)
+    largeur = 6
+    longueur = (n+1)*20
     for i in range(3):
-        rectangle(x, y, longueur, largeur)
-        x += 30 + (n*10) + n*20
-        largeur = (n+1)*20
+        rectangle(x, y, largeur, longueur)
+        x += 30 + n*30
 
+            # TESTS
     # rectangle(120, 20, 70, 20)
     # rectangle(170, 20, 70, 20)
+    # decalage_milieu = 80 + ((n-1)*30)
+    # rectangle(decalage_milieu, 20, 40 + ((n-1)*30), 20)
+    # rectangle(decalage_milieu*2-20, 20, 40 + ((n-1)*30), 20)
 
-    decalage_milieu = 80 + ((n-1)*30)
+    # On dessine les n disques sur la première tour
+    # x, y = 20, 20
+    # longueur, largeur = 40 + (n-1)*30, 20
+    # for i in range(n):  
+    #     rectangle(x, y, longueur, largeur)
+    #     x += 15
+    #     y += 20
+    #     longueur -= 30
 
-    rectangle(decalage_milieu, 20, 40 + ((n-1)*30), 20)
-    rectangle(decalage_milieu*2-20, 20, 40 + ((n-1)*30), 20)
-
-# plato = [[], [5], [4, 3, 2, 1]]
-# print(verifVictoire(plato, 5))
-
-dessine_plateau(3)
+dessinePlateau(5)
 done()
