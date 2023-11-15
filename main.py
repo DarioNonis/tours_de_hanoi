@@ -90,5 +90,25 @@ def dessinePlateau(n):
     #     y += 20
     #     longueur -= 30
 
-dessinePlateau(5)
+def dessineDisque(nd, plateau, n):
+    for i in range(len(plateau)):
+        for j in range(len(plateau[i])):
+            if plateau[i][j] == nd:
+                x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15     # Oui le calcul des coordonnées du disque est horrible,
+                y = 20 + j*20                                   # mais avec la puissance des math (et de mon énorme cerveau),
+                longueur = 40 + (nd-1)*30                       # on fait des trucs absolument incroyables ! (bon ok j'ai mis 30mn à faire cte ptn de fonction)
+                largeur = 20                                    # La largeur est constante et de valeur 20.
+                rectangle(x, y, longueur, largeur)
+
+# Exemple avec un plateau avec 5 disques :
+# disques = 5
+# dessinePlateau(disques)
+
+# plato = [[5, 4], [3, 1], [2]]
+# dessineDisque(1, plato, disques)
+# dessineDisque(2, plato, disques)
+# dessineDisque(3, plato, disques)
+# dessineDisque(4, plato, disques)
+# dessineDisque(5, plato, disques)
+
 done()
