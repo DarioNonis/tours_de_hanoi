@@ -110,11 +110,18 @@ def effaceDisque(nd, plateau, n):
                 hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
                 pos_tour_x, pos_tour_y = liste_coord_tours[i]
                 rectangle(pos_tour_x, pos_tour_y, 6, hauteur_tour)
+
+                # On oublie pas de supprimer le disque de son emplacement dans la configuration du plateau
+                plateau[i].remove(nd)
                 
 
 def dessineConfig(plateau, n):
     for i in range(n+1):
-        dessineDisque(i, plateau, n)         
+        dessineDisque(i, plateau, n)
+
+def effaceTout(plateau, n):
+    for i in range(n+1):
+        effaceDisque(i, plateau, n)
 
 # Exemple avec un plateau avec 5 disques :
 disques = 3
@@ -123,12 +130,13 @@ dessinePlateau(disques)
 plato = [[3, 2, 1], [], []]
 dessineConfig(plato, disques)
 
-effaceDisque(1, plato, disques)
-plato[0].remove(1)
-effaceDisque(2, plato, disques)
-plato[0].remove(2)
-effaceDisque(3, plato, disques)
-plato[0].remove(3)
+effaceTout(plato, disques)
+# effaceDisque(1, plato, disques)
+# plato[0].remove(1)
+# effaceDisque(2, plato, disques)
+# plato[0].remove(2)
+# effaceDisque(3, plato, disques)
+# plato[0].remove(3)
 
 
 done()
