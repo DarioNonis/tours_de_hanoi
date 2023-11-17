@@ -36,6 +36,7 @@ def verifVictoire(plateau, n):
 
 plateau_ord_org = (-300, -200)
 speed(4000)
+liste_coord_tours = []
 title("Tours de Hanoï")
 
 def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
@@ -67,28 +68,14 @@ def dessinePlateau(n):
     
     # On dessine les tours
     x = 37 + (n-1)*15                               # le 37 ici sert juste à centrer la tour (qui est de largeur 6) 
-    y = (n+1)*20                                    # Rappel : les coordonnées ont pour origine le coin supérieur gauche de la base (0, 0)
+    y = (n+1)*20                                    # Rappel : les coordonnées ont pour origine le coin supérieur gauche de la base (qui a pour coordonnées (0, 0))
     largeur = 6
     longueur = (n+1)*20
+    liste_coord_tours.append((x, y))
     for i in range(3):
         rectangle(x, y, largeur, longueur)
         x += 30 + n*30
-
-            # TESTS
-    # rectangle(120, 20, 70, 20)
-    # rectangle(170, 20, 70, 20)
-    # decalage_milieu = 80 + ((n-1)*30)
-    # rectangle(decalage_milieu, 20, 40 + ((n-1)*30), 20)
-    # rectangle(decalage_milieu*2-20, 20, 40 + ((n-1)*30), 20)
-
-    # On dessine les n disques sur la première tour
-    # x, y = 20, 20
-    # longueur, largeur = 40 + (n-1)*30, 20
-    # for i in range(n):  
-    #     rectangle(x, y, longueur, largeur)
-    #     x += 15
-    #     y += 20
-    #     longueur -= 30
+        liste_coord_tours.append((x, y))
 
 def dessineDisque(nd, plateau, n):
     for i in range(len(plateau)):
@@ -100,15 +87,43 @@ def dessineDisque(nd, plateau, n):
                 largeur = 20                                    # La largeur est constante et de valeur 20.
                 rectangle(x, y, longueur, largeur)
 
-# Exemple avec un plateau avec 5 disques :
-# disques = 5
-# dessinePlateau(disques)
+def effaceDisque(nd, plateau, n):
+    for i in range(len(plateau)):
+        for j in range(len(plateau[i])):
+            if plateau[i][j] == nd:
+                # Calcul des coordonnées et de la longueur
+                x = plateau_ord_org[0] + 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15
+                y = plateau_ord_org[1] + 20 + j*20
+                longueur = 40 + (nd-1)*30
+                largeur = 20
 
-# plato = [[5, 4], [3, 1], [2]]
-# dessineDisque(1, plato, disques)
-# dessineDisque(2, plato, disques)
-# dessineDisque(3, plato, disques)
+                # On efface le disque
+                color("white")
+                up(); goto(x, y - (largeur-1)); down()
+                goto(x, y)
+                goto(x + longueur, y)
+                goto(x + longueur, y - (largeur-1))
+
+                print(n, nbDisques(plateau, i))
+
+                # On redessine la tour
+                hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
+                pos_tour_x, pos_tour_y = liste_coord_tours[i]
+                rectangle(pos_tour_x, pos_tour_y, 6, hauteur_tour)
+
+
+# Exemple avec un plateau avec 5 disques :
+disques = 3
+dessinePlateau(disques)
+
+plato = [[2], [3, 2], [1]]
+dessineDisque(1, plato, disques)
+dessineDisque(2, plato, disques)
+dessineDisque(3, plato, disques)
 # dessineDisque(4, plato, disques)
 # dessineDisque(5, plato, disques)
+effaceDisque(2, plato, disques)
+
+
 
 done()
