@@ -104,26 +104,31 @@ def effaceDisque(nd, plateau, n):
                 goto(x + longueur, y)
                 goto(x + longueur, y - (largeur-1))
 
-                print(n, nbDisques(plateau, i))
+                # print(n, nbDisques(plateau, i))
 
                 # On redessine la tour
                 hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
                 pos_tour_x, pos_tour_y = liste_coord_tours[i]
                 rectangle(pos_tour_x, pos_tour_y, 6, hauteur_tour)
+                
 
+def dessineConfig(plateau, n):
+    for i in range(n+1):
+        dessineDisque(i, plateau, n)         
 
 # Exemple avec un plateau avec 5 disques :
 disques = 3
 dessinePlateau(disques)
 
-plato = [[2], [3, 2], [1]]
-dessineDisque(1, plato, disques)
-dessineDisque(2, plato, disques)
-dessineDisque(3, plato, disques)
-# dessineDisque(4, plato, disques)
-# dessineDisque(5, plato, disques)
-effaceDisque(2, plato, disques)
+plato = [[3, 2, 1], [], []]
+dessineConfig(plato, disques)
 
+effaceDisque(1, plato, disques)
+plato[0].remove(1)
+effaceDisque(2, plato, disques)
+plato[0].remove(2)
+effaceDisque(3, plato, disques)
+plato[0].remove(3)
 
 
 done()
