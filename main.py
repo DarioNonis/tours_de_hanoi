@@ -137,17 +137,17 @@ def lireCoords(plateau):
         liste_indice_tours = [0, 1, 2]
         liste_indice_tours.remove(tour_depart)
 
-        if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # On vérifie qu'au moins un déplacement est possible
-            deplacement_possible = True
+        if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # Important : on vérifie qu'au moins un déplacement est possible,
+            deplacement_possible = True                                                                                         # sinon on peut softlock le jeu
         else:
             print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
     
     # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
     tour_arrivee = -1
-    while tour_arrivee not in [0, 1, 2]:                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
+    while tour_arrivee not in [0, 1, 2]:                                                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
         tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
-        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                    # si c'est le cas et si la tour contient un disque,
-            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:               # on vérifie que celui-ci soit plus grand que le disque déplacé
+        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # si c'est le cas et si la tour contient un disque,
+            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
                 tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
         elif tour_arrivee not in [0, 1, 2]:
             print("Numéro de tour invalide !")
