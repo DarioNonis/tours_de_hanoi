@@ -22,7 +22,7 @@ def posDisque(plateau, numdisque):
             
 def verifDepl(plateau, nt1, nt2):
     autorise = False
-    if disqueSup(nt1) < disqueSup(nt2) or disqueSup(nt2) == -1:
+    if disqueSup(plateau, nt1) < disqueSup(plateau, nt2) or disqueSup(plateau, nt2) == -1:
         autorise = True
     return autorise
 
@@ -123,14 +123,32 @@ def effaceTout(plateau, n):
     for i in range(n+1):
         effaceDisque(i, plateau, n)
 
+def lireCoords(plateau):
+    tour_depart = -1                                                                            # On demande la tour de départ,
+    while tour_depart not in [0, 1, 2]:                                                         # on vérifie qu'elle soit bien comprise dans l'ensemble {0, 1, 2} 
+        tour_depart = int(input("Quelle tour de départ (0, 1 ou 2) ? "))
+        if tour_depart in [0, 1, 2]:
+            while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
+                tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+    
+    tour_arrivee = -1                                                                                   # On demande la tour d'arrivée,
+    while tour_arrivee not in [0, 1, 2]:                                                                # on vérifie qu'elle soit bien comprise dans l'ensemble {0, 1, 2} 
+        tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                        # si c'est le cas alors, si la tour contient un disque,
+            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):                   # on vérifie que celui-ci soit plus grand que le disque déplacé
+                tour_depart = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? ")) 
+
+    print(tour_depart, tour_arrivee)
+
 # Exemple avec un plateau avec 5 disques :
 disques = 3
-dessinePlateau(disques)
+# dessinePlateau(disques)
 
-plato = [[3, 2, 1], [], []]
-dessineConfig(plato, disques)
+plato = [[3, 1], [], [2]]
+print(plato)
+# dessineConfig(plato, disques)
 
-effaceTout(plato, disques)
+# effaceTout(plato, disques)
 # effaceDisque(1, plato, disques)
 # plato[0].remove(1)
 # effaceDisque(2, plato, disques)
@@ -138,5 +156,6 @@ effaceTout(plato, disques)
 # effaceDisque(3, plato, disques)
 # plato[0].remove(3)
 
+lireCoords(plato)
 
 done()
