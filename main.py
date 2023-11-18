@@ -126,8 +126,12 @@ def lireCoords(plateau):
     while not deplacement_possible:
         
         tour_depart = -1
-        while tour_depart not in [0, 1, 2]:                                                         # on vérifie que le numéro donné soit 0, 1 ou 2
-            tour_depart = int(input("Quelle tour de départ (0, 1 ou 2) ? "))
+        while tour_depart not in [0, 1, 2]:                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
+            tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon) ? "))
+
+            if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
+                return (tour_depart, None)
+            
             if tour_depart in [0, 1, 2]:
                 while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
                     tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
@@ -168,33 +172,36 @@ def jouerUnCoup(plateau, n):
     deplacement = lireCoords(plateau)
     disque_a_deplacer = disqueSup(plateau, deplacement[0])
     
-    effaceDisque(disque_a_deplacer, plateau, n)
-    for tour in plateau:
-        tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
-    plateau[deplacement[1]].append(disque_a_deplacer)
-    
-    dessineDisque(disque_a_deplacer, plateau, n)
+    if deplacement[0] != -1:
+        effaceDisque(disque_a_deplacer, plateau, n)
+        for tour in plateau:
+            tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
+        plateau[deplacement[1]].append(disque_a_deplacer)
 
-# Exemple avec un plateau avec 5 disques :
+        dessineDisque(disque_a_deplacer, plateau, n)
+    return deplacement[0]
+
+def boucleJeu(plateau, n):
+    abandon = False
+    coups_max = 2**n - 1 + n*2                      # On met le nombre de coups maximal au nombre de coup minimal possible + 2n coups en plus
+    coups = 0
+    
+    while not verifVictoire(plateau, n) and not abandon and coups_max > coups:
+        if jouerUnCoup(plateau, n) == -1:
+            abandon = True
+        coups += 1
+        print(plateau, verifVictoire(plateau, n))
+        print(coups)
+    return (verifVictoire(plateau, n), coups, coups_max)
+
+# Exemple avec un plateau avec 3 disques :
 disques = 3
 dessinePlateau(disques)
 
-plato = [[3, 2, 1], [], []]
+plato = init(disques)
 print(plato)
 dessineConfig(plato, disques)
 
-# effaceTout(plato, disques)
-# print(plato)
-# effaceDisque(1, plato, disques)
-# plato[0].remove(1)
-# effaceDisque(2, plato, disques)
-# plato[0].remove(2)
-# effaceDisque(3, plato, disques)
-# plato[0].remove(3)
-
-# lireCoords(plato)
-while True:
-    jouerUnCoup(plato, disques)
-    print(plato)
+boucleJeu(plato, disques)
 
 done()
