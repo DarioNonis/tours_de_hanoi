@@ -147,7 +147,7 @@ def lireCoords(plateau):
     while tour_arrivee not in [0, 1, 2]:                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
         tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
         if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                    # si c'est le cas et si la tour contient un disque,
-            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):               # on vérifie que celui-ci soit plus grand que le disque déplacé
+            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:               # on vérifie que celui-ci soit plus grand que le disque déplacé
                 tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
         elif tour_arrivee not in [0, 1, 2]:
             print("Numéro de tour invalide !")
@@ -159,7 +159,7 @@ def lireCoords(plateau):
         while tour_arrivee not in [0, 1, 2]:                                                # (Oui j'aurais pu faire une fonction pour éviter de répéter du code)
             tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
             if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:
-                while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):
+                while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:
                     tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
         
     return (tour_depart, tour_arrivee)
@@ -179,7 +179,7 @@ def jouerUnCoup(plateau, n):
 disques = 3
 dessinePlateau(disques)
 
-plato = [[3, 2], [1], []]
+plato = [[3, 2, 1], [], []]
 print(plato)
 dessineConfig(plato, disques)
 
@@ -193,6 +193,8 @@ dessineConfig(plato, disques)
 # plato[0].remove(3)
 
 # lireCoords(plato)
-jouerUnCoup(plato, disques)
+while True:
+    jouerUnCoup(plato, disques)
+    print(plato)
 
 done()
