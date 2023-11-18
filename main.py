@@ -124,27 +124,54 @@ def effaceTout(plateau, n):
         effaceDisque(i, plateau, n)
 
 def lireCoords(plateau):
-    tour_depart = -1                                                                            # On demande la tour de départ,
-    while tour_depart not in [0, 1, 2]:                                                         # on vérifie qu'elle soit bien comprise dans l'ensemble {0, 1, 2} 
-        tour_depart = int(input("Quelle tour de départ (0, 1 ou 2) ? "))
-        if tour_depart in [0, 1, 2]:
-            while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
-                tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+    # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible:
+    deplacement_possible = False
+    while not deplacement_possible:
+        
+        tour_depart = -1
+        while tour_depart not in [0, 1, 2]:                                                         # on vérifie que le numéro donné soit 0, 1 ou 2
+            tour_depart = int(input("Quelle tour de départ (0, 1 ou 2) ? "))
+            if tour_depart in [0, 1, 2]:
+                while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
+                    tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+            else:
+                print("Numéro de tour invalide !")
     
-    tour_arrivee = -1                                                                                   # On demande la tour d'arrivée,
-    while tour_arrivee not in [0, 1, 2]:                                                                # on vérifie qu'elle soit bien comprise dans l'ensemble {0, 1, 2} 
-        tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
-        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                        # si c'est le cas alors, si la tour contient un disque,
-            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):                   # on vérifie que celui-ci soit plus grand que le disque déplacé
-                tour_depart = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? ")) 
+        liste_indice_tours = [0, 1, 2]
+        liste_indice_tours.remove(tour_depart)
 
-    print(tour_depart, tour_arrivee)
+        if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # On vérifie qu'au moins un déplacement est possible
+            deplacement_possible = True
+        else:
+            print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
+    
+    # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
+    tour_arrivee = -1
+    while tour_arrivee not in [0, 1, 2]:                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
+        tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                    # si c'est le cas et si la tour contient un disque,
+            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):               # on vérifie que celui-ci soit plus grand que le disque déplacé
+                tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
+        elif tour_arrivee not in [0, 1, 2]:
+            print("Numéro de tour invalide !")
+
+    # Il ne reste plus qu'a vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
+    while tour_arrivee == tour_depart:
+        print("Votre tour d'arrivée ne peut pas être la même que la tour de départ !")
+        tour_arrivee = -1                                                                   # Si c'est le cas on redemande le numéro de la tour d'arrivée
+        while tour_arrivee not in [0, 1, 2]:                                                # (Oui j'aurais pu faire une fonction pour éviter de répéter du code)
+            tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+            if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:
+                while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart):
+                    tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
+        
+    return (tour_depart, tour_arrivee)
 
 # Exemple avec un plateau avec 5 disques :
 disques = 3
 # dessinePlateau(disques)
 
-plato = [[3, 1], [], [2]]
+plato = [[3, 2], [1], []]
 print(plato)
 # dessineConfig(plato, disques)
 
@@ -158,4 +185,4 @@ print(plato)
 
 lireCoords(plato)
 
-done()
+# done()
