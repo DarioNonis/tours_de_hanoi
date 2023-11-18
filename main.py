@@ -102,19 +102,13 @@ def effaceDisque(nd, plateau, n):
                 up(); goto(x, y - (largeur-1)); down()
                 goto(x, y)
                 goto(x + longueur, y)
-                goto(x + longueur, y - (largeur-1))
-
-                # print(n, nbDisques(plateau, i))
+                goto(x + longueur, y - (largeur))
 
                 # On redessine la tour
                 hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
                 pos_tour_x, pos_tour_y = liste_coord_tours[i]
                 rectangle(pos_tour_x, pos_tour_y, 6, hauteur_tour)
-
-                # On oublie pas de supprimer le disque de son emplacement dans la configuration du plateau
-                plateau[i].remove(nd)
                 
-
 def dessineConfig(plateau, n):
     for i in range(n+1):
         dessineDisque(i, plateau, n)
@@ -122,6 +116,9 @@ def dessineConfig(plateau, n):
 def effaceTout(plateau, n):
     for i in range(n+1):
         effaceDisque(i, plateau, n)
+
+        for tour in plateau:                        # On oublie pas de supprimer le disque i de son emplacement dans la configuration du plateau
+            tour.remove(i) if i in tour else tour
 
 def lireCoords(plateau):
     # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible:
@@ -169,13 +166,14 @@ def lireCoords(plateau):
 
 # Exemple avec un plateau avec 5 disques :
 disques = 3
-# dessinePlateau(disques)
+dessinePlateau(disques)
 
 plato = [[3, 2], [1], []]
 print(plato)
-# dessineConfig(plato, disques)
+dessineConfig(plato, disques)
 
-# effaceTout(plato, disques)
+effaceTout(plato, disques)
+print(plato)
 # effaceDisque(1, plato, disques)
 # plato[0].remove(1)
 # effaceDisque(2, plato, disques)
@@ -183,6 +181,6 @@ print(plato)
 # effaceDisque(3, plato, disques)
 # plato[0].remove(3)
 
-lireCoords(plato)
+# lireCoords(plato)
 
-# done()
+done()
