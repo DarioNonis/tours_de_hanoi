@@ -125,36 +125,44 @@ def lireCoords(plateau):
     deplacement_possible = False
     while not deplacement_possible:
         
-        tour_depart = -1
-        while tour_depart not in [0, 1, 2]:                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
-            tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon) ? "))
+        tour_depart = ""
+        try:
+            while tour_depart not in [0, 1, 2] and tour_depart == "":                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
+                tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon) ? "))
 
-            if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
-                return (tour_depart, None)
-            
-            if tour_depart in [0, 1, 2]:
-                while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
-                    tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+                if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
+                    return (tour_depart, None)
+                
+                if tour_depart in [0, 1, 2]:
+                    while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
+                        tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+                else:
+                    print("Numéro de tour invalide !")
+        
+            liste_indice_tours = [0, 1, 2]
+            liste_indice_tours.remove(tour_depart)
+
+            if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # Important : on vérifie qu'au moins un déplacement est possible,
+                deplacement_possible = True                                                                                         # sinon on peut softlock le jeu
             else:
-                print("Numéro de tour invalide !")
-    
-        liste_indice_tours = [0, 1, 2]
-        liste_indice_tours.remove(tour_depart)
-
-        if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # Important : on vérifie qu'au moins un déplacement est possible,
-            deplacement_possible = True                                                                                         # sinon on peut softlock le jeu
-        else:
-            print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
+                print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
+            
+        except:
+            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2, -1 si abandon) !")
     
     # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
-    tour_arrivee = -1
-    while tour_arrivee not in [0, 1, 2]:                                                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
-        tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
-        if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # si c'est le cas et si la tour contient un disque,
-            while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
-                tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
-        elif tour_arrivee not in [0, 1, 2]:
-            print("Numéro de tour invalide !")
+    tour_arrivee = ""
+    while tour_arrivee == "":
+        try:
+            while tour_arrivee not in [0, 1, 2]:                                                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
+                tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+                if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # si c'est le cas et si la tour contient un disque,
+                    while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
+                        tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
+                elif tour_arrivee not in [0, 1, 2]:
+                    print("Numéro de tour invalide !")
+        except:
+            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2) !")
 
     # Il ne reste plus qu'a vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
     while tour_arrivee == tour_depart:
