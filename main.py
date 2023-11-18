@@ -164,6 +164,17 @@ def lireCoords(plateau):
         
     return (tour_depart, tour_arrivee)
 
+def jouerUnCoup(plateau, n):
+    deplacement = lireCoords(plateau)
+    disque_a_deplacer = disqueSup(plateau, deplacement[0])
+    
+    effaceDisque(disque_a_deplacer, plateau, n)
+    for tour in plateau:
+        tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
+    plateau[deplacement[1]].append(disque_a_deplacer)
+    
+    dessineDisque(disque_a_deplacer, plateau, n)
+
 # Exemple avec un plateau avec 5 disques :
 disques = 3
 dessinePlateau(disques)
@@ -172,8 +183,8 @@ plato = [[3, 2], [1], []]
 print(plato)
 dessineConfig(plato, disques)
 
-effaceTout(plato, disques)
-print(plato)
+# effaceTout(plato, disques)
+# print(plato)
 # effaceDisque(1, plato, disques)
 # plato[0].remove(1)
 # effaceDisque(2, plato, disques)
@@ -182,5 +193,6 @@ print(plato)
 # plato[0].remove(3)
 
 # lireCoords(plato)
+jouerUnCoup(plato, disques)
 
 done()
