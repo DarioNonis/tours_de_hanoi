@@ -183,25 +183,39 @@ def jouerUnCoup(plateau, n):
 
 def boucleJeu(plateau, n):
     abandon = False
-    coups_max = 2**n - 1 + n*2                      # On met le nombre de coups maximal au nombre de coup minimal possible + 2n coups en plus
+    coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
     coups = 0
-    
-    while not verifVictoire(plateau, n) and not abandon and coups_max > coups:
+
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n > coups:    # on laisse une marge d'erreur de n coups possible en plus au joueur
+        print("Coup numéro", coups + 1)
         if jouerUnCoup(plateau, n) == -1:
             abandon = True
         coups += 1
-        print(plateau, verifVictoire(plateau, n))
-        print(coups)
-    return (verifVictoire(plateau, n), coups, coups_max)
 
-# Exemple avec un plateau avec 3 disques :
-disques = 3
-dessinePlateau(disques)
+    return (abandon, verifVictoire(plateau, n), coups, coups_max)
 
-plato = init(disques)
-print(plato)
-dessineConfig(plato, disques)
 
-boucleJeu(plato, disques)
+# PROGRAMME PRINCIPAL
+nbdisques = 0
+while nbdisques < 2:
+    try:
+        nbdisques = int(input("Combien de disques souhaitez vous ? "))
+        if nbdisques < 2:
+            print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
+    except:
+        print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
 
-done()
+# Initialisation du plateau et des disques dans l'interface de turtle
+plateau = init(nbdisques)
+dessinePlateau(nbdisques)
+dessineConfig(plateau, nbdisques)
+
+# Démarrage du jeu puis récupération des résultats une fois terminé
+resultat = boucleJeu(plateau, nbdisques)
+
+if resultat[0]:                                                     # Cas de l'abandon
+    print(f"Abandon de la partie après {resultat[2]} coups")
+elif resultat[1]:                                                   # Cas de la victoire
+    print(f"Victoire ! Gagné en {resultat[2]} coups. (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+elif resultat[3] + nbdisques >= resultat[2]:                        # Cas de la défaite
+    print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
