@@ -148,7 +148,7 @@ def lireCoords(plateau):
                 print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
             
         except:
-            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2, -1 si abandon) !")
+            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2, -1 pour abandon) !")
     
     # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
     tour_arrivee = ""
@@ -194,20 +194,38 @@ def boucleJeu(plateau, n):
     coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
     coups = 0
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n > coups:    # on laisse une marge d'erreur de n coups possible en plus au joueur
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n > coups:      # On laisse une marge d'erreur de n coups possible en plus au joueur
         print("Coup numéro", coups + 1)
-        if jouerUnCoup(plateau, n) == -1:
+        if jouerUnCoup(plateau, n) == - 1:
             abandon = True
         coups += 1
 
     return (abandon, verifVictoire(plateau, n), coups, coups_max)
 
+def dernierCoup(coups):
+    dernier_coup = len(coups) - 1
+
+    tour_depart = None
+    tour_arrivee = None
+
+    dernier_coup_precedent = coups[dernier_coup - 1]
+    dernier_coup_actuel = coups[dernier_coup]
+
+    for i in range(3):
+        if len(dernier_coup_precedent[i]) < len(dernier_coup_actuel[i]):        # On vérifie si la pile sur le tour i a diminué
+            tour_arrivee = i
+        elif len(dernier_coup_precedent[i]) > len(dernier_coup_actuel[i]):      # On vérifie si la pile sur le tour i a augmenté
+            tour_depart = i
+
+    return tour_depart, tour_arrivee
+
 
 # PROGRAMME PRINCIPAL
+print("Bienvenue dans les Tours de Hanoi")
 nbdisques = 0
 while nbdisques < 2:
     try:
-        nbdisques = int(input("Combien de disques souhaitez vous ? "))
+        nbdisques = int(input("Combien de disques souhaitez-vous ? "))
         if nbdisques < 2:
             print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
     except:
@@ -222,8 +240,8 @@ dessineConfig(plateau, nbdisques)
 resultat = boucleJeu(plateau, nbdisques)
 
 if resultat[0]:                                                     # Cas de l'abandon
-    print(f"Abandon de la partie après {resultat[2]} coups")
+    print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
 elif resultat[1]:                                                   # Cas de la victoire
-    print(f"Victoire ! Gagné en {resultat[2]} coups. (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+    print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
 elif resultat[3] + nbdisques >= resultat[2]:                        # Cas de la défaite
     print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
