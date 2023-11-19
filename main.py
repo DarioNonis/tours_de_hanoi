@@ -219,6 +219,21 @@ def dernierCoup(coups):
 
     return tour_depart, tour_arrivee
 
+def annulerDernierCoup(coups):
+    dernier_coup = len(coups) - 1
+    tour_arrivee, tour_depart = dernierCoup(coups)                              # Obtenir les numéros des tours
+
+    tours_dernier_coup = coups[dernier_coup]                                    # Récupérer les listes des tours de départ et d'arrivée
+    tour_arrivee = tours_dernier_coup[tour_arrivee]
+    tour_depart = tours_dernier_coup[tour_depart]
+
+    disque = tour_arrivee.pop(-1)                                               # Déplacer le disque de la tour d'arrivée à la tour de départ
+    tour_depart.append(disque)
+
+    coups.pop(dernier_coup)
+
+    return coups
+
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoi")
