@@ -219,14 +219,13 @@ def boucleJeu(plateau, n):
         nb_coup += 1
 
         dico_coups[nb_coup] = copy.deepcopy(plateau)                        # On rajoute le numéro de coups comme une clé du dictionnaire et on lui adresse la configuration du plateau comme valeur
-        print("dico_coups", dico_coups) #DEBUG
 
     return (abandon, verifVictoire(plateau, n), nb_coup, coups_max)
 
 def dernierCoup(dico_coups):
     dernier_coup = len(dico_coups) - 1
     tour_depart, tour_arrivee = None, None
-    
+
     dernier_coup_precedent = dico_coups[dernier_coup - 1]
     dernier_coup_actuel = dico_coups[dernier_coup]
 
