@@ -1,4 +1,5 @@
 from turtle import *
+import copy
 
 def init(n):
     tour_de_depart = []
@@ -10,7 +11,7 @@ def nbDisques(plateau, numtour):
     return len(plateau[numtour])
 
 def disqueSup(plateau, numtour):
-    if len(plateau[numtour]) != 0 and 0 <= numtour <= 2:
+    if 0 <= numtour <= 2 and len(plateau[numtour]) != 0:
         return plateau[numtour][-1]
     return -1
 
@@ -128,9 +129,12 @@ def lireCoords(plateau):
         tour_depart = ""
         try:
             while tour_depart not in [0, 1, 2] and tour_depart == "":                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
-                tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon) ? "))
+                tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent) ? "))
 
                 if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
+                    return (tour_depart, None)
+                
+                if tour_depart == 3:
                     return (tour_depart, None)
                 
                 if tour_depart in [0, 1, 2]:
@@ -180,7 +184,7 @@ def jouerUnCoup(plateau, n):
     deplacement = lireCoords(plateau)
     disque_a_deplacer = disqueSup(plateau, deplacement[0])
     
-    if deplacement[0] != -1:
+    if deplacement[0] != -1 and deplacement[0] != 3:
         effaceDisque(disque_a_deplacer, plateau, n)
         for tour in plateau:
             tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
@@ -190,26 +194,41 @@ def jouerUnCoup(plateau, n):
     return deplacement[0]
 
 def boucleJeu(plateau, n):
+    dico_coups = {}
+    dico_coups[0] = copy.deepcopy(plateau)
+
     abandon = False
     coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
-    coups = 0
+    nb_coup = 0
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n > coups:      # On laisse une marge d'erreur de n coups possible en plus au joueur
-        print("Coup numéro", coups + 1)
-        if jouerUnCoup(plateau, n) == - 1:
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n > nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
+        print("\nCoup numéro", nb_coup + 1)
+        choix_depart = jouerUnCoup(plateau, n)        
+
+        if choix_depart == - 1:
             abandon = True
-        coups += 1
 
-    return (abandon, verifVictoire(plateau, n), coups, coups_max)
+        elif choix_depart == 3:
+            if len(dico_coups) > 1:                                         # Si au moins un coup a été joué,
+                dico_coups = annulerDernierCoup(plateau, n, dico_coups)     # On annule le dernier coup et on modifie le dictionnaire des coups
+                nb_coup -= 2                                                # On enlève 2 au nombre de coups pour en rajouter un par la suite donc au final décrémenter le compteur de 1
+            else:
+                print("Impossible d'annuler le dernier coup si aucun coup n'a été joué !")
+                nb_coup -= 1                                                # On décrémente de 2 pour ne pas augumenter au final le nombre de tours
 
-def dernierCoup(coups):
-    dernier_coup = len(coups) - 1
+        nb_coup += 1
 
-    tour_depart = None
-    tour_arrivee = None
+        dico_coups[nb_coup] = copy.deepcopy(plateau)                        # On rajoute le numéro de coups comme une clé du dictionnaire et on lui adresse la configuration du plateau comme valeur
+        print("dico_coups", dico_coups) #DEBUG
 
-    dernier_coup_precedent = coups[dernier_coup - 1]
-    dernier_coup_actuel = coups[dernier_coup]
+    return (abandon, verifVictoire(plateau, n), nb_coup, coups_max)
+
+def dernierCoup(dico_coups):
+    dernier_coup = len(dico_coups) - 1
+    tour_depart, tour_arrivee = None, None
+    
+    dernier_coup_precedent = dico_coups[dernier_coup - 1]
+    dernier_coup_actuel = dico_coups[dernier_coup]
 
     for i in range(3):
         if len(dernier_coup_precedent[i]) < len(dernier_coup_actuel[i]):        # On vérifie si la pile sur le tour i a diminué
@@ -217,26 +236,25 @@ def dernierCoup(coups):
         elif len(dernier_coup_precedent[i]) > len(dernier_coup_actuel[i]):      # On vérifie si la pile sur le tour i a augmenté
             tour_depart = i
 
-    return tour_depart, tour_arrivee
+    return (tour_depart, tour_arrivee)
 
-def annulerDernierCoup(coups):
-    dernier_coup = len(coups) - 1
-    tour_arrivee, tour_depart = dernierCoup(coups)                              # Obtenir les numéros des tours
+def annulerDernierCoup(plateau, n, dico_coups):
+    # (basicalement le même code que dans jouerUnCoup)
+    dernier_coup = dernierCoup(dico_coups)                                      # On récupère le dernier coup joué,
+    disque_a_replacer = disqueSup(plateau, dernier_coup[1])                     # et le disque qui a été déplacé au dernier coup.
+    effaceDisque(disque_a_replacer, plateau, n)                                 # Puis on fait l'opération inverse : on efface le disque sur l'interface Turtle.
+    for tour in plateau:                                                        # On le supprime de la tour où il est,
+        tour.remove(disque_a_replacer) if disque_a_replacer in tour else tour
+    plateau[dernier_coup[0]].append(disque_a_replacer)                          # pour le replacer au bon endroit dans la tour où il était avant.
 
-    tours_dernier_coup = coups[dernier_coup]                                    # Récupérer les listes des tours de départ et d'arrivée
-    tour_arrivee = tours_dernier_coup[tour_arrivee]
-    tour_depart = tours_dernier_coup[tour_depart]
+    dessineDisque(disque_a_replacer, plateau, n)        # On le redessine au bon endroit sur l'interface tutrle,
+    dico_coups.pop(len(dico_coups) - 1)                 # puis on efface le dernier coup du dictionnaire des coups
 
-    disque = tour_arrivee.pop(-1)                                               # Déplacer le disque de la tour d'arrivée à la tour de départ
-    tour_depart.append(disque)
-
-    coups.pop(dernier_coup)
-
-    return coups
+    return dico_coups
 
 
 # PROGRAMME PRINCIPAL
-print("Bienvenue dans les Tours de Hanoi")
+print("Bienvenue dans les Tours de Hanoï")
 nbdisques = 0
 while nbdisques < 2:
     try:
@@ -260,3 +278,5 @@ elif resultat[1]:                                                   # Cas de la 
     print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
 elif resultat[3] + nbdisques >= resultat[2]:                        # Cas de la défaite
     print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+
+done()
