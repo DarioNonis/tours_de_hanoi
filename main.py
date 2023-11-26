@@ -1,5 +1,5 @@
 from turtle import *
-import copy
+import copy, time
 
 def init(n):
     tour_de_depart = []
@@ -217,7 +217,7 @@ def boucleJeu(plateau, n):
                 nb_coup -= 1                                                # On décrémente de 2 pour ne pas augumenter au final le nombre de tours
 
         nb_coup += 1
-
+        print(nb_coup) # DEBUG
         dico_coups[nb_coup] = copy.deepcopy(plateau)                        # On rajoute le numéro de coups comme une clé du dictionnaire et on lui adresse la configuration du plateau comme valeur
 
     return (abandon, verifVictoire(plateau, n), nb_coup, coups_max)
@@ -251,31 +251,50 @@ def annulerDernierCoup(plateau, n, dico_coups):
 
     return dico_coups
 
+def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):
+    dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu)
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
-nbdisques = 0
-while nbdisques < 2:
-    try:
-        nbdisques = int(input("Combien de disques souhaitez-vous ? "))
-        if nbdisques < 2:
-            print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
-    except:
-        print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
+dico_score = {}
+id_partie = 1
 
-# Initialisation du plateau et des disques dans l'interface de turtle
-plateau = init(nbdisques)
-dessinePlateau(nbdisques)
-dessineConfig(plateau, nbdisques)
+rejouer = "oui"
+while rejouer in ["o", "O", "oui", "Oui"]:
+        
+    nbdisques = 0
+    while nbdisques < 2:
+        try:
+            nbdisques = int(input("Combien de disques souhaitez-vous ? : "))
+            if nbdisques < 2:
+                print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
+        except:
+            print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
 
-# Démarrage du jeu puis récupération des résultats une fois terminé
-resultat = boucleJeu(plateau, nbdisques)
+    start_time = time.time()
 
-if resultat[0]:                                                     # Cas de l'abandon
-    print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
-elif resultat[1]:                                                   # Cas de la victoire
-    print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
-elif resultat[3] + nbdisques >= resultat[2]:                        # Cas de la défaite
-    print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+    # Initialisation du plateau et des disques dans l'interface de turtle
+    plateau = init(nbdisques)
+    dessinePlateau(nbdisques)
+    dessineConfig(plateau, nbdisques)
 
-done()
+    # Démarrage du jeu puis récupération des résultats une fois terminé
+    resultat = boucleJeu(plateau, nbdisques)
+    temps_de_jeu = time.time() - start_time
+
+    if resultat[0]:                                                     # Cas de l'abandon
+        print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
+
+    elif resultat[3] + nbdisques <= resultat[2]:                        # Cas de la défaite
+        print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+
+    elif resultat[1]:                                                   # Cas de la victoire
+        print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+        nom = input("Entrez votre nom : ")
+        sauvScore(dico_score, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1))
+
+    rejouer = input("Voulez vous rejouer (Oui / Non) ? : ")
+    id_partie += 1
+
+# print(dico_score)
+# done()
