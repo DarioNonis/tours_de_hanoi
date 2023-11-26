@@ -35,7 +35,7 @@ def verifVictoire(plateau, n):
         return True
     return False
 
-plateau_ord_org = (-300, -200)
+plateau_ord_org = (-300, -200)          # Coordonnées à l'origine de la base du plateau (coin supérieur gauche)
 speed(4000)
 liste_coord_tours = []
 title("Tours de Hanoï")
@@ -120,6 +120,13 @@ def effaceTout(plateau, n):
 
         for tour in plateau:                        # On oublie pas de supprimer le disque i de son emplacement dans la configuration du plateau
             tour.remove(i) if i in tour else tour
+
+def effacePlateauDisques(n):
+    x = 0
+    y = (n+1)*20
+    longueur = 80 + 3*(40 + (n-1)*30)
+    largeur = (n+2)*20
+    rectangle(x, y, longueur, largeur, "white")
 
 def lireCoords(plateau):
     # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible:
@@ -251,7 +258,7 @@ def annulerDernierCoup(plateau, n, dico_coups):
 
     return dico_coups
 
-def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):
+def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):          # Effet de bord sur dico_scores pour ajouter la partie gagnée
     dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu)
 
 # PROGRAMME PRINCIPAL
@@ -261,7 +268,9 @@ id_partie = 1
 
 rejouer = "oui"
 while rejouer in ["o", "O", "oui", "Oui"]:
-        
+
+    liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
+
     nbdisques = 0
     while nbdisques < 2:
         try:
@@ -294,6 +303,7 @@ while rejouer in ["o", "O", "oui", "Oui"]:
         sauvScore(dico_score, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1))
 
     rejouer = input("Voulez vous rejouer (Oui / Non) ? : ")
+    effacePlateauDisques(nbdisques)
     id_partie += 1
 
 # print(dico_score)
