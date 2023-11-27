@@ -262,7 +262,6 @@ def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):          
     dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu)
 
 def afficheScores(dico_scores, nd):
-    print(f"\nTableau des scores pour {nd} disques :")
     tableau_scores = []
     for partie in dico_scores.keys():
         if dico_scores[partie][1] == nd:
@@ -279,10 +278,30 @@ def afficheScores(dico_scores, nd):
                 tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
     # affichage du tableau des scores trié
+    print(f"\nTableau des scores pour {nd} disques :")
     i = 1
     for score in tableau_scores:
         nb = str(i) + "er " if i == 1 else str(i) + "eme"
         print(f"{nb} : {score[0]}, en {score[2]} coups et {score[3]} secondes.")
+        i += 1
+
+def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on trie seulement en fonction du temps (comme demandé dans le PDF)
+    tableau_scores = []
+    for partie in dico_scores.keys():
+        tableau_scores.append(dico_scores[partie])
+    
+    # Tri seulement par le temps
+    for i in range(len(tableau_scores)):
+        for j in range(0, len(tableau_scores)-1-i):
+            if tableau_scores[j][3] > tableau_scores[j + 1][3]:
+                tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+
+    # affichage du tableau des scores trié
+    print("\nTableau des scores en fonction du temps :")
+    i = 1
+    for score in tableau_scores:
+        nb = str(i) + "er " if i == 1 else str(i) + "eme"
+        print(f"{nb} : {score[0]}, avec {score[3]} secondes.")
         i += 1
 
 # PROGRAMME PRINCIPAL
@@ -330,5 +349,7 @@ while rejouer in ["o", "O", "oui", "Oui"]:
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-# dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
-# afficheScores(dico_score_2, nbdisques)
+dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
+
+afficheScores(dico_score_2, nbdisques)
+afficheChronos(dico_score_2)
