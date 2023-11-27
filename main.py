@@ -208,7 +208,7 @@ def boucleJeu(plateau, n):
     coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
     nb_coup = 0
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n > nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
         print("\nCoup numéro", nb_coup + 1)
         choix_depart = jouerUnCoup(plateau, n)        
 
@@ -261,9 +261,33 @@ def annulerDernierCoup(plateau, n, dico_coups):
 def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):          # Effet de bord sur dico_scores pour ajouter la partie gagnée
     dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu)
 
+def afficheScores(dico_scores, nd):
+    print(f"\nTableau des scores pour {nd} disques :")
+    tableau_scores = []
+    for partie in dico_scores.keys():
+        if dico_scores[partie][1] == nd:
+            tableau_scores.append(dico_scores[partie])
+    
+    # On fait un tri (ici un tri bulle) sur tableau_scores qui trie par le nombre de coups ET avec le temps de la partie (plus bas = meilleur).
+    for i in range(len(tableau_scores)):
+        for j in range(0, len(tableau_scores)-1-i):
+
+            if tableau_scores[j][2] > tableau_scores[j + 1][2]:
+                tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+
+            elif tableau_scores[j][2] == tableau_scores[j + 1][2] and tableau_scores[j][3] > tableau_scores[j + 1][3]:
+                tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+
+    # affichage du tableau des scores trié
+    i = 1
+    for score in tableau_scores:
+        nb = str(i) + "er " if i == 1 else str(i) + "eme"
+        print(f"{nb} : {score[0]}, en {score[2]} coups et {score[3]} secondes.")
+        i += 1
+
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
-dico_score = {}
+dico_scores = {}
 id_partie = 1
 
 rejouer = "oui"
@@ -294,17 +318,17 @@ while rejouer in ["o", "O", "oui", "Oui"]:
     if resultat[0]:                                                     # Cas de l'abandon
         print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
 
-    elif resultat[3] + nbdisques <= resultat[2]:                        # Cas de la défaite
+    elif resultat[3] + nbdisques < resultat[2]:                        # Cas de la défaite
         print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
 
     elif resultat[1]:                                                   # Cas de la victoire
         print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
         nom = input("Entrez votre nom : ")
-        sauvScore(dico_score, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1))
+        sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1))
 
     rejouer = input("Voulez vous rejouer (Oui / Non) ? : ")
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-# print(dico_score)
-# done()
+# dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
+# afficheScores(dico_score_2, nbdisques)
