@@ -281,8 +281,8 @@ def afficheScores(dico_scores, nd):
     print(f"\nTableau des scores pour {nd} disques :")
     i = 1
     for score in tableau_scores:
-        nb = str(i) + "er " if i == 1 else str(i) + "eme"
-        print(f"{nb} : {score[0]}, en {score[2]} coups et {score[3]} secondes.")
+        nb = str(i) + "er " if i == 1 else str(i) + "ème"
+        print(f"{nb} : {score[0]}, avec {score[2]} coups et {score[3]} secondes.")
         i += 1
 
 def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on trie seulement en fonction du temps (comme demandé dans le PDF)
@@ -300,7 +300,7 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
     print("\nTableau des scores en fonction du temps :")
     i = 1
     for score in tableau_scores:
-        nb = str(i) + "er " if i == 1 else str(i) + "eme"
+        nb = str(i) + "er " if i == 1 else str(i) + "ème"
         print(f"{nb} : {score[0]}, avec {score[3]} secondes.")
         i += 1
 
