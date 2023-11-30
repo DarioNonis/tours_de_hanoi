@@ -329,17 +329,23 @@ def reflexionMoy(dico_scores):
     return reflexion_moyenne_joueurs
 
 def afficheRapide(reflexion_moyenne_joueur):
+    # On crée un liste contenant les coupes (nom du joueur, temps de réflexion moyen) pour ensuite trier la liste (on ne peut pas trier un dictionnaire)
     liste_reflexion_joueurs = []
     for joueur in reflexion_moyenne_joueur:
         liste_reflexion_joueurs.append((joueur, reflexion_moyenne_joueur[joueur]))
     
-    # On fait un tri (ici un tri bulle) sur tableau_scores qui trie par le nombre de coups ET avec le temps de la partie (plus bas = meilleur).
+    # On trie donc par la suite la liste des couples (nom du joueur, temps de réflexion moyen) que l'on vient de génerer
     for i in range(len(liste_reflexion_joueurs)):
         for j in range(0, len(liste_reflexion_joueurs)-1-i):
-            if liste_reflexion_joueurs[j][2] > liste_reflexion_joueurs[j + 1][2]:
+            if liste_reflexion_joueurs[j][1] > liste_reflexion_joueurs[j + 1][1]:
                 liste_reflexion_joueurs[j], liste_reflexion_joueurs[j + 1] = liste_reflexion_joueurs[j + 1], liste_reflexion_joueurs[j]
     
-    pass
+    print("\nTableau des scores en fonction de leur rapidité de réflexion :")
+    i = 1
+    for joueur in liste_reflexion_joueurs:
+        nb = str(i) + "er " if i == 1 else str(i) + "ème"
+        print(f"{nb} : {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
+        i += 1
 
 
 # PROGRAMME PRINCIPAL
@@ -389,7 +395,7 @@ while rejouer in ["o", "O", "oui", "Oui"]:
 
 dico_scores_bis = {1: ('aaa', 2, 3, 34.7, [8.6, 4.0, 6.0, 9.1, 4.9]), 2: ('aaa', 3, 7, 22.1, [1.9, 5.1, 3.8, 1.9, 2.7, 2.6, 2.4]), 3: ('bbb', 2, 3, 10.3, [2.6, 3.6, 2.1])}
 # print(dico_scores)
-reflexionMoy(dico_scores_bis)
+afficheRapide(reflexionMoy(dico_scores_bis))
 
 # dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
 
