@@ -309,20 +309,24 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
 
 def reflexionMoy(dico_scores):
     # On commence par créer un dictionnaire avec pour clés les noms des joueurs et pour valeurs des clés les temps de réflexion de chaque partie jouée par le joueur
-    dico_temps_joueurs = {}
+    temps_reflexion_joueurs = {}
     for partie in dico_scores:
         liste_temps = dico_scores[partie][4].copy()
-        if dico_scores[partie][0] not in dico_temps_joueurs:                 # On regarde si on a déjà ajouté une partie du joueur au dico_temps_joueurs
-            dico_temps_joueurs[dico_scores[partie][0]] = liste_temps         # et on l'ajoute dans le dico_temps_joueurs si ce n'est pas le cas
+        if dico_scores[partie][0] not in temps_reflexion_joueurs:                 # On regarde si on a déjà ajouté une partie du joueur au temps_reflexion_joueurs
+            temps_reflexion_joueurs[dico_scores[partie][0]] = liste_temps         # et on l'ajoute dans le temps_reflexion_joueurs si ce n'est pas le cas
         else:
-            dico_temps_joueurs[dico_scores[partie][0]] += liste_temps        # sinon on concatène la liste du temps des parties jouées par ce joueur
+            temps_reflexion_joueurs[dico_scores[partie][0]] += liste_temps        # sinon on concatène la liste du temps des parties jouées par ce joueur
     
     # Ensuite on fait un parcour simple du dictionnaire créé en affichant la moyenne des différents temps de réflexion
-    for joueur in dico_temps_joueurs:
+    reflexion_moyenne_joueurs = {}
+    for joueur in temps_reflexion_joueurs:
         somme_temps = 0
-        for temps_de_reflexion in dico_temps_joueurs[joueur]:
+        for temps_de_reflexion in temps_reflexion_joueurs[joueur]:
             somme_temps += temps_de_reflexion
-        print(f"Moyenne du temps de réfléxion {"de " + joueur if joueur[0] not in 'aeiouy' else "d\'" + joueur} : {round(somme_temps / len(dico_temps_joueurs[joueur]), 1)}")
+        # print(f"Moyenne du temps de réfléxion {"de " + joueur if joueur[0] not in 'aeiouy' else "d\'" + joueur} : {round(somme_temps / len(temps_reflexion_joueurs[joueur]), 1)}")
+        reflexion_moyenne_joueurs[joueur] = round(somme_temps / len(temps_reflexion_joueurs[joueur]), 1)
+    
+    return reflexion_moyenne_joueurs
 
 
 # PROGRAMME PRINCIPAL
