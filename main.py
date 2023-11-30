@@ -207,10 +207,14 @@ def boucleJeu(plateau, n):
     abandon = False
     coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
     nb_coup = 0
+    liste_temps_reflexion = []
 
     while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
         print("\nCoup numéro", nb_coup + 1)
+
+        debut_temps_reflexion = time.time()
         choix_depart = jouerUnCoup(plateau, n)        
+        liste_temps_reflexion.append(round(time.time() - debut_temps_reflexion, 1))
 
         if choix_depart == - 1:
             abandon = True
@@ -221,13 +225,12 @@ def boucleJeu(plateau, n):
                 nb_coup -= 2                                                # On enlève 2 au nombre de coups pour en rajouter un par la suite donc au final décrémenter le compteur de 1
             else:
                 print("Impossible d'annuler le dernier coup si aucun coup n'a été joué !")
-                nb_coup -= 1                                                # On décrémente de 2 pour ne pas augumenter au final le nombre de tours
+                nb_coup -= 1                                                # On décrémente de 1 pour ne pas augumenter au final le nombre de tours
 
         nb_coup += 1
-        print(nb_coup) # DEBUG
         dico_coups[nb_coup] = copy.deepcopy(plateau)                        # On rajoute le numéro de coups comme une clé du dictionnaire et on lui adresse la configuration du plateau comme valeur
 
-    return (abandon, verifVictoire(plateau, n), nb_coup, coups_max)
+    return (abandon, verifVictoire(plateau, n), nb_coup, coups_max, liste_temps_reflexion)
 
 def dernierCoup(dico_coups):
     dernier_coup = len(dico_coups) - 1
@@ -258,8 +261,8 @@ def annulerDernierCoup(plateau, n, dico_coups):
 
     return dico_coups
 
-def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu):          # Effet de bord sur dico_scores pour ajouter la partie gagnée
-    dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu)
+def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu, liste_temps_reflexion):          # Effet de bord sur dico_scores pour ajouter la partie gagnée
+    dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu, liste_temps_reflexion)
 
 def afficheScores(dico_scores, nd):
     tableau_scores = []
@@ -304,6 +307,24 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
         print(f"{nb} : {score[0]}, avec {score[3]} secondes.")
         i += 1
 
+def reflexionMoy(dico_scores):
+    # On commence par créer un dictionnaire avec pour clés les noms des joueurs et pour valeurs des clés les temps de réflexion de chaque partie jouée par le joueur
+    dico_temps_joueurs = {}
+    for partie in dico_scores:
+        liste_temps = dico_scores[partie][4].copy()
+        if dico_scores[partie][0] not in dico_temps_joueurs:                 # On regarde si on a déjà ajouté une partie du joueur au dico_temps_joueurs
+            dico_temps_joueurs[dico_scores[partie][0]] = liste_temps         # et on l'ajoute dans le dico_temps_joueurs si ce n'est pas le cas
+        else:
+            dico_temps_joueurs[dico_scores[partie][0]] += liste_temps        # sinon on concatène la liste du temps des parties jouées par ce joueur
+    
+    # Ensuite on fait un parcour simple du dictionnaire créé en affichant la moyenne des différents temps de réflexion
+    for joueur in dico_temps_joueurs:
+        somme_temps = 0
+        for temps_de_reflexion in dico_temps_joueurs[joueur]:
+            somme_temps += temps_de_reflexion
+        print(f"Moyenne du temps de réfléxion {"de " + joueur if joueur[0] not in 'aeiouy' else "d\'" + joueur} : {round(somme_temps / len(dico_temps_joueurs[joueur]), 1)}")
+
+
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
 dico_scores = {}
@@ -343,13 +364,17 @@ while rejouer in ["o", "O", "oui", "Oui"]:
     elif resultat[1]:                                                   # Cas de la victoire
         print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
         nom = input("Entrez votre nom : ")
-        sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1))
+        sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
 
     rejouer = input("Voulez vous rejouer (Oui / Non) ? : ")
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
+dico_scores_bis = {1: ('aaa', 2, 3, 34.7, [8.6, 4.0, 6.0, 9.1, 4.9]), 2: ('aaa', 3, 7, 22.1, [1.9, 5.1, 3.8, 1.9, 2.7, 2.6, 2.4]), 3: ('bbb', 2, 3, 10.3, [2.6, 3.6, 2.1])}
+# print(dico_scores)
+reflexionMoy(dico_scores_bis)
 
-afficheScores(dico_score_2, nbdisques)
-afficheChronos(dico_score_2)
+# dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
+
+# afficheScores(dico_score_2, nbdisques)
+# afficheChronos(dico_score_2)
