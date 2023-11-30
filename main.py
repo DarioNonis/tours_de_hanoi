@@ -328,6 +328,19 @@ def reflexionMoy(dico_scores):
     
     return reflexion_moyenne_joueurs
 
+def afficheRapide(reflexion_moyenne_joueur):
+    liste_reflexion_joueurs = []
+    for joueur in reflexion_moyenne_joueur:
+        liste_reflexion_joueurs.append((joueur, reflexion_moyenne_joueur[joueur]))
+    
+    # On fait un tri (ici un tri bulle) sur tableau_scores qui trie par le nombre de coups ET avec le temps de la partie (plus bas = meilleur).
+    for i in range(len(liste_reflexion_joueurs)):
+        for j in range(0, len(liste_reflexion_joueurs)-1-i):
+            if liste_reflexion_joueurs[j][2] > liste_reflexion_joueurs[j + 1][2]:
+                liste_reflexion_joueurs[j], liste_reflexion_joueurs[j + 1] = liste_reflexion_joueurs[j + 1], liste_reflexion_joueurs[j]
+    
+    pass
+
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
