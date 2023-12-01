@@ -264,29 +264,35 @@ def annulerDernierCoup(plateau, n, dico_coups):
 def sauvScore(dico_score, id_partie, nom, nd, nb_coups, temps_de_jeu, liste_temps_reflexion):          # Effet de bord sur dico_scores pour ajouter la partie gagnée
     dico_score[id_partie] = (nom, nd, nb_coups, temps_de_jeu, liste_temps_reflexion)
 
-def afficheScores(dico_scores, nd):
-    tableau_scores = []
-    for partie in dico_scores.keys():
-        if dico_scores[partie][1] == nd:
-            tableau_scores.append(dico_scores[partie])
-    
-    # On fait un tri (ici un tri bulle) sur tableau_scores qui trie par le nombre de coups ET avec le temps de la partie (plus bas = meilleur).
-    for i in range(len(tableau_scores)):
-        for j in range(0, len(tableau_scores)-1-i):
+def afficheScores(dico_scores, liste_nbdisques_joues):
+    # On affiche pour chaque numéro de nombre de disques joués, le score des parties qui ont étés jouées avec ce numéro
+    for nd in liste_nbdisques_joues:
 
-            if tableau_scores[j][2] > tableau_scores[j + 1][2]:
-                tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+        # On créé une liste des différents scores pour pouvoir faire un tri ensuite
+        tableau_scores = []
+        for partie in dico_scores.keys():
+            if dico_scores[partie][1] == nd:
+                tableau_scores.append(dico_scores[partie])
+        
+        # On fait un tri (ici un tri bulle) sur tableau_scores,
+        for i in range(len(tableau_scores)):
+            for j in range(0, len(tableau_scores)-1-i):
 
-            elif tableau_scores[j][2] == tableau_scores[j + 1][2] and tableau_scores[j][3] > tableau_scores[j + 1][3]:
-                tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+                # qui trie par le nombre de coups,
+                if tableau_scores[j][2] > tableau_scores[j + 1][2]:
+                    tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
-    # affichage du tableau des scores trié
-    print(f"\nTableau des scores pour {nd} disques :")
-    i = 1
-    for score in tableau_scores:
-        nb = str(i) + "er " if i == 1 else str(i) + "ème"
-        print(f"{nb} : {score[0]}, avec {score[2]} coups et {score[3]} secondes.")
-        i += 1
+                # ET par le temps de la partie (plus bas = meilleur).
+                elif tableau_scores[j][2] == tableau_scores[j + 1][2] and tableau_scores[j][3] > tableau_scores[j + 1][3]:
+                    tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
+
+        # Il ne reste plus qu'a parcourir la liste des différents scores triées
+        print(f"\nTableau des scores pour {nd} disques :")
+        i = 1
+        for score in tableau_scores:
+            nb = str(i) + "er " if i == 1 else str(i) + "ème"
+            print(f"{nb} : {score[0]}, avec {score[2]} coups et {score[3]} secondes.")
+            i += 1
 
 def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on trie seulement en fonction du temps (comme demandé dans le PDF)
     tableau_scores = []
@@ -418,11 +424,14 @@ while jouer:
             jouer = False
             choix = 1               # Pour sortir de la boucle
             print("Au revoir")
-        # elif choix == 2:
-        #     afficheScores(dico_scores, liste_nbdisques_joues)
+
+        # Choix = 0 permet de sortir de la boucle du menu principal
+        elif choix == 2:
+            afficheScores(dico_scores, liste_nbdisques_joues)
+            choix = 0
         elif choix == 3:
             afficheChronos(dico_scores)
-            choix = 0               # Pour éviter de boucler à l'infini
+            choix = 0
         elif choix == 4:
             afficheRapide(reflexionMoy(dico_scores))
             choix = 0
