@@ -188,9 +188,11 @@ def lireCoords(plateau):
     return (tour_depart, tour_arrivee)
 
 def jouerUnCoup(plateau, n):
+    reflexion_start = time.time()
     deplacement = lireCoords(plateau)
+    temps_de_reflexion = time.time() - reflexion_start
     disque_a_deplacer = disqueSup(plateau, deplacement[0])
-    
+
     if deplacement[0] != -1 and deplacement[0] != 3:
         effaceDisque(disque_a_deplacer, plateau, n)
         for tour in plateau:
@@ -198,7 +200,7 @@ def jouerUnCoup(plateau, n):
         plateau[deplacement[1]].append(disque_a_deplacer)
 
         dessineDisque(disque_a_deplacer, plateau, n)
-    return deplacement[0]
+    return (deplacement[0], temps_de_reflexion)
 
 def boucleJeu(plateau, n):
     dico_coups = {}
@@ -213,8 +215,9 @@ def boucleJeu(plateau, n):
         print("\nCoup numéro", nb_coup + 1)
 
         debut_temps_reflexion = time.time()
-        choix_depart = jouerUnCoup(plateau, n)        
-        liste_temps_reflexion.append(round(time.time() - debut_temps_reflexion, 1))
+        deplacement_reflexion = jouerUnCoup(plateau, n)
+        choix_depart = deplacement_reflexion[0]
+        liste_temps_reflexion.append(round(deplacement_reflexion[1], 1))
 
         if choix_depart == - 1:
             abandon = True
@@ -398,7 +401,7 @@ while jouer:
 
     elif resultat[1]:                                                   # Cas de la victoire
         print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
-        nom = input("Entrez votre nom : ")
+        nom = input("\nEntrez votre nom : ")
         sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
 
     choix = 0
