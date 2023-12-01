@@ -361,10 +361,19 @@ def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2
     if nbdisques > 0:
         solutionDeplacements(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)
         liste_deplacements.append((tour_depart, tour_arrivee))
-        # print(f"Déplacement de {tour_depart} vers {tour_arrivee}")
         solutionDeplacements(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)
     return liste_deplacements
 
+def resolutionAutomatique(plateau, n, liste_deplacements):
+    for deplacement in liste_deplacements:
+        disque_a_deplacer = disqueSup(plateau, deplacement[0])
+        effaceDisque(disque_a_deplacer, plateau, n)
+        
+        for tour in plateau:
+            tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
+        plateau[deplacement[1]].append(disque_a_deplacer)
+
+        dessineDisque(disque_a_deplacer, plateau, n)
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
@@ -387,68 +396,70 @@ while jouer:
         except:
             print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
 
-    # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
-    if nbdisques not in liste_nbdisques_joues:
-        liste_nbdisques_joues.append(nbdisques)
+#     # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
+#     if nbdisques not in liste_nbdisques_joues:
+#         liste_nbdisques_joues.append(nbdisques)
 
-    start_time = time.time()
+#     start_time = time.time()
 
     # Initialisation du plateau et des disques dans l'interface de turtle
     plateau = init(nbdisques)
     dessinePlateau(nbdisques)
     dessineConfig(plateau, nbdisques)
 
-    # Démarrage du jeu puis récupération des résultats une fois terminé
-    resultat = boucleJeu(plateau, nbdisques)
-    temps_de_jeu = time.time() - start_time
+#     # Démarrage du jeu puis récupération des résultats une fois terminé
+#     resultat = boucleJeu(plateau, nbdisques)
+#     temps_de_jeu = time.time() - start_time
 
-    if resultat[0]:                                                     # Cas de l'abandon
-        print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
+#     if resultat[0]:                                                     # Cas de l'abandon
+#         print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
 
-    elif resultat[3] + nbdisques < resultat[2]:                        # Cas de la défaite
-        print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+#     elif resultat[3] + nbdisques < resultat[2]:                        # Cas de la défaite
+#         print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
 
-    elif resultat[1]:                                                   # Cas de la victoire
-        print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
-        nom = input("\nEntrez votre nom : ")
-        sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
+#     elif resultat[1]:                                                   # Cas de la victoire
+#         print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+#         nom = input("\nEntrez votre nom : ")
+#         sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
 
-    choix = 0
-    while choix != 1:       # Tant que le joueur ne décide pas de rejouer
+#     choix = 0
+#     while choix != 1:       # Tant que le joueur ne décide pas de rejouer
 
-        print("""\nMenu principal, que voulez vous faire ?
-1: Rejouer
-2: Affichage des scores (en fonction d'un nombre de disque)
-3: Affichage des scores en fonction du temps de jeu
-4: Affichage du score en fonction du temps de réflexion moyen
-5: Quitter le jeu""")
+#         print("""\nMenu principal, que voulez vous faire ?
+# 1: Rejouer
+# 2: Affichage des scores (en fonction d'un nombre de disque)
+# 3: Affichage des scores en fonction du temps de jeu
+# 4: Affichage du score en fonction du temps de réflexion moyen
+# 5: Quitter le jeu""")
 
-        # On demande son choix (tout en gérant les potentielles erreurs de golmon)
-        while choix not in [1, 2, 3, 4, 5]:
-            try:
-                choix = int(input("\nVotre choix (1, 2, 3, 4 ou 5) ? "))
-                if choix not in [1, 2, 3, 4, 5]:
-                    print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4 ou 5)")
-            except:
-                print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4 ou 5)")
+#         # On demande son choix (tout en gérant les potentielles erreurs de golmon)
+#         while choix not in [1, 2, 3, 4, 5]:
+#             try:
+#                 choix = int(input("\nVotre choix (1, 2, 3, 4 ou 5) ? "))
+#                 if choix not in [1, 2, 3, 4, 5]:
+#                     print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4 ou 5)")
+#             except:
+#                 print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4 ou 5)")
             
-        if choix == 5:
-            jouer = False
-            choix = 1               # Pour sortir de la boucle
-            print("Au revoir")
+#         if choix == 5:
+#             jouer = False
+#             choix = 1               # Pour sortir de la boucle
+#             print("Au revoir")
 
-        # Choix = 0 permet de sortir de la boucle du menu principal
-        elif choix == 2:
-            afficheScores(dico_scores, liste_nbdisques_joues)
-            choix = 0
-        elif choix == 3:
-            afficheChronos(dico_scores)
-            choix = 0
-        elif choix == 4:
-            afficheRapide(reflexionMoy(dico_scores))
-            choix = 0
+#         # Choix = 0 permet de sortir de la boucle du menu principal
+#         elif choix == 2:
+#             afficheScores(dico_scores, liste_nbdisques_joues)
+#             choix = 0
+#         elif choix == 3:
+#             afficheChronos(dico_scores)
+#             choix = 0
+#         elif choix == 4:
+#             afficheRapide(reflexionMoy(dico_scores))
+#             choix = 0
 
+#     effacePlateauDisques(nbdisques)
+#     id_partie += 1
+
+    input("Pressez la touche entrée pour résoudre le problème automatiquement")
+    resolutionAutomatique(plateau, nbdisques, solutionDeplacements(nbdisques))
     effacePlateauDisques(nbdisques)
-    id_partie += 1
-
-# solution_liste_deplacements = solutionDeplacements(nbdisques)
