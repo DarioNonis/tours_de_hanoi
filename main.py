@@ -352,12 +352,14 @@ def afficheRapide(reflexion_moyenne_joueur):
 print("Bienvenue dans les Tours de Hanoï")
 dico_scores = {}
 id_partie = 1
+liste_nbdisques_joues = []
 
-rejouer = "oui"
-while rejouer in ["o", "O", "oui", "Oui"]:
+jouer = True
+while jouer:
 
     liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
 
+    # On demande à l'utilisateur un nombre de disques supérieur ou égal à 2
     nbdisques = 0
     while nbdisques < 2:
         try:
@@ -366,6 +368,10 @@ while rejouer in ["o", "O", "oui", "Oui"]:
                 print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
         except:
             print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
+
+    # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
+    if nbdisques not in liste_nbdisques_joues:
+        liste_nbdisques_joues.append(nbdisques)
 
     start_time = time.time()
 
@@ -389,15 +395,47 @@ while rejouer in ["o", "O", "oui", "Oui"]:
         nom = input("Entrez votre nom : ")
         sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
 
-    rejouer = input("Voulez vous rejouer (Oui / Non) ? : ")
+    choix = 0
+    while choix != 1:       # Tant que le joueur ne décide pas de rejouer
+
+        print("""\nMenu principal, que voulez vous faire ?
+1: Rejouer
+2: Affichage des scores (en fonction d'un nombre de disque)
+3: Affichage des scores en fonction du temps de jeu
+4: Affichage du score en fonction du temps de réflexion moyen
+5: Quitter le jeu""")
+
+        # On demande son choix (tout en gérant les potentielles erreurs de golmon)
+        while choix not in [1, 2, 3, 4, 5]:
+            try:
+                choix = int(input("\nVotre choix (1, 2, 3, 4 ou 5) ? "))
+                if choix not in [1, 2, 3, 4, 5]:
+                    print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4 ou 5)")
+            except:
+                print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4 ou 5)")
+            
+        if choix == 5:
+            jouer = False
+            choix = 1               # Pour sortir de la boucle
+            print("Au revoir")
+        # elif choix == 2:
+        #     afficheScores(dico_scores, liste_nbdisques_joues)
+        elif choix == 3:
+            afficheChronos(dico_scores)
+            choix = 0               # Pour éviter de boucler à l'infini
+        elif choix == 4:
+            afficheRapide(reflexionMoy(dico_scores))
+            choix = 0
+
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-dico_scores_bis = {1: ('aaa', 2, 3, 34.7, [8.6, 4.0, 6.0, 9.1, 4.9]), 2: ('aaa', 3, 7, 22.1, [1.9, 5.1, 3.8, 1.9, 2.7, 2.6, 2.4]), 3: ('bbb', 2, 3, 10.3, [2.6, 3.6, 2.1])}
+# dico_scores_bis = {1: ('aaa', 2, 3, 34.7, [8.6, 4.0, 6.0, 9.1, 4.9]), 2: ('aaa', 3, 7, 22.1, [1.9, 5.1, 3.8, 1.9, 2.7, 2.6, 2.4]), 3: ('bbb', 2, 3, 10.3, [2.6, 3.6, 2.1])}
 # print(dico_scores)
-afficheRapide(reflexionMoy(dico_scores_bis))
+# afficheRapide(reflexionMoy(dico_scores_bis))
 
 # dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
 
+### afficheScores à modifier ! 
 # afficheScores(dico_score_2, nbdisques)
 # afficheChronos(dico_score_2)
