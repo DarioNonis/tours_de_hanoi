@@ -356,6 +356,15 @@ def afficheRapide(reflexion_moyenne_joueur):
         print(f"{nb} : {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
         i += 1
 
+def resolutionAutomatique(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
+    liste_deplacements = l_d
+    if nbdisques > 0:
+        resolutionAutomatique(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)
+        liste_deplacements.append((tour_depart, tour_arrivee))
+        # print(f"Déplacement de {tour_depart} vers {tour_arrivee}")
+        resolutionAutomatique(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)
+    return liste_deplacements
+
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
@@ -442,12 +451,4 @@ while jouer:
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-# dico_scores_bis = {1: ('aaa', 2, 3, 34.7, [8.6, 4.0, 6.0, 9.1, 4.9]), 2: ('aaa', 3, 7, 22.1, [1.9, 5.1, 3.8, 1.9, 2.7, 2.6, 2.4]), 3: ('bbb', 2, 3, 10.3, [2.6, 3.6, 2.1])}
-# print(dico_scores)
-# afficheRapide(reflexionMoy(dico_scores_bis))
-
-# dico_score_2 = {1:('ccc', nbdisques, 8, 30.7), 2:('bbb', nbdisques, 3, 21.9), 3:('aaa', nbdisques, 5, 11.7), 4:('ddd', nbdisques, 3, 11.4)}
-
-### afficheScores à modifier ! 
-# afficheScores(dico_score_2, nbdisques)
-# afficheChronos(dico_score_2)
+# solution_liste_deplacements = resolutionAutomatique(nbdisques)
