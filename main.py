@@ -356,13 +356,13 @@ def afficheRapide(reflexion_moyenne_joueur):
         print(f"{nb} : {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
         i += 1
 
-def resolutionAutomatique(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
+def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
     liste_deplacements = l_d
     if nbdisques > 0:
-        resolutionAutomatique(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)
+        solutionDeplacements(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)
         liste_deplacements.append((tour_depart, tour_arrivee))
         # print(f"Déplacement de {tour_depart} vers {tour_arrivee}")
-        resolutionAutomatique(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)
+        solutionDeplacements(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)
     return liste_deplacements
 
 
@@ -451,4 +451,4 @@ while jouer:
     effacePlateauDisques(nbdisques)
     id_partie += 1
 
-# solution_liste_deplacements = resolutionAutomatique(nbdisques)
+# solution_liste_deplacements = solutionDeplacements(nbdisques)
