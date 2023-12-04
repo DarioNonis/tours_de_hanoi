@@ -36,7 +36,8 @@ def verifVictoire(plateau, n):
     return False
 
 plateau_ord_org = (-300, -200)          # Coordonnées à l'origine de la base du plateau (coin supérieur gauche)
-speed(4000)
+speed(0)
+ht()
 liste_coord_tours = []
 title("Tours de Hanoï")
 
@@ -121,12 +122,16 @@ def effaceTout(plateau, n):
         for tour in plateau:                        # On oublie pas de supprimer le disque i de son emplacement dans la configuration du plateau
             tour.remove(i) if i in tour else tour
 
-def effacePlateauDisques(n):
-    x = 0
-    y = (n+1)*20
-    longueur = 80 + 3*(40 + (n-1)*30)
-    largeur = (n+2)*20
-    rectangle(x, y, longueur, largeur, "white")
+def demandeNbDisques():
+    nbdisques = 0
+    while nbdisques < 2:
+        try:
+            nbdisques = int(input("Combien de disques souhaitez-vous ? : "))
+            if nbdisques < 2:
+                print("\033[1;91mVeuillez entrer un nombre entier égal ou supérieur à 2 !\033[0m")
+        except:
+            print("\033[1;91mVeuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !\033[0m")
+    return nbdisques
 
 def lireCoords(plateau):
     # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible:
@@ -366,6 +371,7 @@ def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2
 
 def resolutionAutomatique(plateau, n, liste_deplacements):
     for deplacement in liste_deplacements:
+        # tracer(0, 0)                                              # décommenter cette ligne et la dernière de cette fonction pour grandement accélérer le processus
         disque_a_deplacer = disqueSup(plateau, deplacement[0])
         effaceDisque(disque_a_deplacer, plateau, n)
         
@@ -374,6 +380,7 @@ def resolutionAutomatique(plateau, n, liste_deplacements):
         plateau[deplacement[1]].append(disque_a_deplacer)
 
         dessineDisque(disque_a_deplacer, plateau, n)
+        # update()
 
 # PROGRAMME PRINCIPAL
 print("Bienvenue dans les Tours de Hanoï")
@@ -384,82 +391,91 @@ liste_nbdisques_joues = []
 jouer = True
 while jouer:
 
-    liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
+    choix = 0
+    while choix != 1:
 
-    # On demande à l'utilisateur un nombre de disques supérieur ou égal à 2
-    nbdisques = 0
-    while nbdisques < 2:
-        try:
-            nbdisques = int(input("Combien de disques souhaitez-vous ? : "))
-            if nbdisques < 2:
-                print("Veuillez entrer un nombre entier égal ou supérieur à 2 !")
-        except:
-            print("Veuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !")
+        print("""\nMenu principal, que voulez vous faire ?
+1: Jouer
+2: Affichage des scores (en fonction d'un nombre de disque)
+3: Affichage des scores en fonction du temps de jeu
+4: Affichage du score en fonction du temps de réflexion moyen
+5: Résoudre automatiquement 
+6: Quitter le jeu""")
 
-#     # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
-#     if nbdisques not in liste_nbdisques_joues:
-#         liste_nbdisques_joues.append(nbdisques)
-
-#     start_time = time.time()
-
-    # Initialisation du plateau et des disques dans l'interface de turtle
-    plateau = init(nbdisques)
-    dessinePlateau(nbdisques)
-    dessineConfig(plateau, nbdisques)
-
-#     # Démarrage du jeu puis récupération des résultats une fois terminé
-#     resultat = boucleJeu(plateau, nbdisques)
-#     temps_de_jeu = time.time() - start_time
-
-#     if resultat[0]:                                                     # Cas de l'abandon
-#         print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
-
-#     elif resultat[3] + nbdisques < resultat[2]:                        # Cas de la défaite
-#         print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
-
-#     elif resultat[1]:                                                   # Cas de la victoire
-#         print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
-#         nom = input("\nEntrez votre nom : ")
-#         sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
-
-#     choix = 0
-#     while choix != 1:       # Tant que le joueur ne décide pas de rejouer
-
-#         print("""\nMenu principal, que voulez vous faire ?
-# 1: Rejouer
-# 2: Affichage des scores (en fonction d'un nombre de disque)
-# 3: Affichage des scores en fonction du temps de jeu
-# 4: Affichage du score en fonction du temps de réflexion moyen
-# 5: Quitter le jeu""")
-
-#         # On demande son choix (tout en gérant les potentielles erreurs de golmon)
-#         while choix not in [1, 2, 3, 4, 5]:
-#             try:
-#                 choix = int(input("\nVotre choix (1, 2, 3, 4 ou 5) ? "))
-#                 if choix not in [1, 2, 3, 4, 5]:
-#                     print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4 ou 5)")
-#             except:
-#                 print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4 ou 5)")
+        # On demande son choix (tout en gérant les potentielles erreurs de golmon)
+        while choix not in [1, 2, 3, 4, 5, 6]:
+            try:
+                choix = int(input("\nVotre choix (1, 2, 3, 4, 5 ou 6) ? "))
+                if choix not in [1, 2, 3, 4, 5, 6]:
+                    print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4, 5 ou 6)")
+            except:
+                print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4, 5 ou 6)")
             
-#         if choix == 5:
-#             jouer = False
-#             choix = 1               # Pour sortir de la boucle
-#             print("Au revoir")
+        if choix == 6:
+            jouer = False
+            choix = 1               # Pour sortir de la boucle
+            print("Au revoir")
 
-#         # Choix = 0 permet de sortir de la boucle du menu principal
-#         elif choix == 2:
-#             afficheScores(dico_scores, liste_nbdisques_joues)
-#             choix = 0
-#         elif choix == 3:
-#             afficheChronos(dico_scores)
-#             choix = 0
-#         elif choix == 4:
-#             afficheRapide(reflexionMoy(dico_scores))
-#             choix = 0
+        elif choix == 2:
+            afficheScores(dico_scores, liste_nbdisques_joues)
+            choix = 0           # (permet de sortir de la boucle du menu principal)
 
-#     effacePlateauDisques(nbdisques)
-#     id_partie += 1
+        elif choix == 3:
+            afficheChronos(dico_scores)
+            choix = 0
 
-    input("Pressez la touche entrée pour résoudre le problème automatiquement")
-    resolutionAutomatique(plateau, nbdisques, solutionDeplacements(nbdisques))
-    effacePlateauDisques(nbdisques)
+        elif choix == 4:
+            afficheRapide(reflexionMoy(dico_scores))
+            choix = 0
+
+        elif choix == 5:
+            # On initialise juste ce qu'il faut pour que le programme puisse résoudre le problème (notamment le plateau turtle)
+            liste_coord_tours = []
+            nbdisques = demandeNbDisques()
+            plateau = init(nbdisques); dessinePlateau(nbdisques); dessineConfig(plateau, nbdisques)
+            
+            input("Pressez la touche entrée pour résoudre le problème automatiquement.")
+            resolutionAutomatique(plateau, nbdisques, solutionDeplacements(nbdisques, l_d=[]))
+            input("Pressez la touche entrée pour quitter.")
+            
+            # On efface les dessins dans l'interface turtle et on sort de la boucle
+            clearscreen(); speed(0); ht()
+            choix = 0
+
+
+        elif choix == 1:
+            liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
+
+            # On demande à l'utilisateur un nombre de disques supérieur ou égal à 2
+            nbdisques = demandeNbDisques()
+
+            # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
+            if nbdisques not in liste_nbdisques_joues:
+                liste_nbdisques_joues.append(nbdisques)
+
+            start_time = time.time()
+
+            # Initialisation du plateau et des disques dans l'interface de turtle
+            plateau = init(nbdisques)
+            dessinePlateau(nbdisques)
+            dessineConfig(plateau, nbdisques)
+
+            # Démarrage du jeu puis récupération des résultats une fois terminé
+            resultat = boucleJeu(plateau, nbdisques)
+            temps_de_jeu = time.time() - start_time
+
+            if resultat[0]:                                                     # Cas de l'abandon
+                print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
+
+            elif resultat[3] + nbdisques < resultat[2]:                         # Cas de la défaite
+                print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+
+            elif resultat[1]:                                                   # Cas de la victoire
+                print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+                nom = input("\nEntrez votre nom : ")
+                sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
+
+            # On efface les dessins dans l'interface turtle et on sort de la boucle
+            clearscreen(); speed(0); ht()
+            choix = 0
+    id_partie += 1
