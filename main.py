@@ -48,12 +48,14 @@ def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rec
     color(couleur)
     fillcolor("white")                                          # On remplit le rectangle de blanc pour éviter de devoir
     begin_fill()                                                # effacer la tour qui se trouve derrière.
+    tracer(0, 0)
     for i in range(2):
         forward(longueur)
         right(90)
         forward(largeur)
         right(90)
     end_fill()
+    update()
 
     # La boucle pourrait être remplacée par :
 
@@ -141,7 +143,7 @@ def lireCoords(plateau):
         tour_depart = ""
         try:
             while tour_depart not in [0, 1, 2] and tour_depart == "":                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
-                tour_depart = int(input("Quelle tour de départ (0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent) ? "))
+                tour_depart = int(input("Quelle tour de départ \033[3;30m(0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent)\033[0m ? "))
 
                 if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
                     return (tour_depart, None)
@@ -151,9 +153,9 @@ def lireCoords(plateau):
                 
                 if tour_depart in [0, 1, 2]:
                     while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
-                        tour_depart = int(input("Tour vide ! Quelle tour de départ (0, 1 ou 2) ? "))
+                        tour_depart = int(input("\033[1;91mTour vide !\033[0m Quelle tour de départ \033[3;30m(0, 1 ou 2)\033[0m ? "))
                 else:
-                    print("Numéro de tour invalide !")
+                    print("\033[1;91mNuméro de tour invalide !\033[0m")
         
             liste_indice_tours = [0, 1, 2]
             liste_indice_tours.remove(tour_depart)
@@ -161,34 +163,34 @@ def lireCoords(plateau):
             if verifDepl(plateau, tour_depart, liste_indice_tours[0]) or verifDepl(plateau, tour_depart, liste_indice_tours[1]):    # Important : on vérifie qu'au moins un déplacement est possible,
                 deplacement_possible = True                                                                                         # sinon on peut softlock le jeu
             else:
-                print("Aucun déplacement possible depuis cette tour ! Veuillez en choisir une autre.")
+                print("\033[1;91mAucun déplacement possible depuis cette tour !\033[0m Veuillez en choisir une autre.")
             
         except:
-            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2, -1 pour abandon) !")
+            print("\033[1;91mVeuillez entrer une valeur correcte ! \033[3;30m(nombre entier égal à 0, 1 ou 2, -1 pour abandon)\033[0m")
     
     # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
     tour_arrivee = ""
     while tour_arrivee == "":
         try:
             while tour_arrivee not in [0, 1, 2]:                                                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
-                tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+                tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
                 if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # si c'est le cas et si la tour contient un disque,
                     while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
-                        tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
+                        tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
                 elif tour_arrivee not in [0, 1, 2]:
-                    print("Numéro de tour invalide !")
+                    print("\033[1;91mNuméro de tour invalide !\033[0m")
         except:
-            print("Veuillez entrer une valeur correcte (nombre entier égal à 0, 1 ou 2) !")
+            print("\033[1;91mVeuillez entrer une valeur correcte ! \033[3;30m(nombre entier égal à 0, 1 ou 2)\033[0m")
 
     # Il ne reste plus qu'a vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
     while tour_arrivee == tour_depart:
-        print("Votre tour d'arrivée ne peut pas être la même que la tour de départ !")
+        print("\033[1;91mVotre tour d'arrivée ne peut pas être la même que la tour de départ !\033[0m")
         tour_arrivee = -1                                                                   # Si c'est le cas on redemande le numéro de la tour d'arrivée
         while tour_arrivee not in [0, 1, 2]:                                                # (Oui j'aurais pu faire une fonction pour éviter de répéter du code)
-            tour_arrivee = int(input("Quelle tour d'arrivée (0, 1 ou 2) ? "))
+            tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
             if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:
                 while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:
-                    tour_arrivee = int(input("Déplacement interdit ! Quelle tour d'arrivée (0, 1 ou 2) ? "))
+                    tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
         
     return (tour_depart, tour_arrivee)
 
@@ -217,7 +219,7 @@ def boucleJeu(plateau, n):
     liste_temps_reflexion = []
 
     while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
-        print("\nCoup numéro", nb_coup + 1)
+        print(f"\n\033[4;36mCoup numéro {nb_coup + 1} :\033[0m")
 
         debut_temps_reflexion = time.time()
         deplacement_reflexion = jouerUnCoup(plateau, n)
@@ -232,7 +234,7 @@ def boucleJeu(plateau, n):
                 dico_coups = annulerDernierCoup(plateau, n, dico_coups)     # On annule le dernier coup et on modifie le dictionnaire des coups
                 nb_coup -= 2                                                # On enlève 2 au nombre de coups pour en rajouter un par la suite donc au final décrémenter le compteur de 1
             else:
-                print("Impossible d'annuler le dernier coup si aucun coup n'a été joué !")
+                print("\033[1;91mImpossible d'annuler le dernier coup si aucun coup n'a été joué !\033[0m")
                 nb_coup -= 1                                                # On décrémente de 1 pour ne pas augumenter au final le nombre de tours
 
         nb_coup += 1
@@ -295,7 +297,7 @@ def afficheScores(dico_scores, liste_nbdisques_joues):
                     tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
         # Il ne reste plus qu'a parcourir la liste des différents scores triées
-        print(f"\nTableau des scores pour {nd} disques :")
+        print(f"\n\033[4;33mTableau des scores pour {nd} disques :\033[0m")
         i = 1
         for score in tableau_scores:
             nb = str(i) + "er " if i == 1 else str(i) + "ème"
@@ -314,7 +316,7 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
                 tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
     # affichage du tableau des scores trié
-    print("\nTableau des scores en fonction du temps :")
+    print("\n\033[4;33mTableau des scores en fonction du temps :\033[0m")
     i = 1
     for score in tableau_scores:
         nb = str(i) + "er " if i == 1 else str(i) + "ème"
@@ -337,7 +339,6 @@ def reflexionMoy(dico_scores):
         somme_temps = 0
         for temps_de_reflexion in temps_reflexion_joueurs[joueur]:
             somme_temps += temps_de_reflexion
-        # print(f"Moyenne du temps de réfléxion {"de " + joueur if joueur[0] not in 'aeiouy' else "d\'" + joueur} : {round(somme_temps / len(temps_reflexion_joueurs[joueur]), 1)}")
         reflexion_moyenne_joueurs[joueur] = round(somme_temps / len(temps_reflexion_joueurs[joueur]), 1)
     
     return reflexion_moyenne_joueurs
@@ -354,7 +355,7 @@ def afficheRapide(reflexion_moyenne_joueur):
             if liste_reflexion_joueurs[j][1] > liste_reflexion_joueurs[j + 1][1]:
                 liste_reflexion_joueurs[j], liste_reflexion_joueurs[j + 1] = liste_reflexion_joueurs[j + 1], liste_reflexion_joueurs[j]
     
-    print("\nTableau des scores en fonction de leur rapidité de réflexion :")
+    print("\n\033[4;33mTableau des scores en fonction de leur rapidité de réflexion :\033[0m")
     i = 1
     for joueur in liste_reflexion_joueurs:
         nb = str(i) + "er " if i == 1 else str(i) + "ème"
@@ -371,7 +372,6 @@ def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2
 
 def resolutionAutomatique(plateau, n, liste_deplacements):
     for deplacement in liste_deplacements:
-        # tracer(0, 0)                                              # décommenter cette ligne et la dernière de cette fonction pour grandement accélérer le processus
         disque_a_deplacer = disqueSup(plateau, deplacement[0])
         effaceDisque(disque_a_deplacer, plateau, n)
         
@@ -380,10 +380,16 @@ def resolutionAutomatique(plateau, n, liste_deplacements):
         plateau[deplacement[1]].append(disque_a_deplacer)
 
         dessineDisque(disque_a_deplacer, plateau, n)
-        # update()
 
 # PROGRAMME PRINCIPAL
-print("Bienvenue dans les Tours de Hanoï")
+
+# Logo ASCII
+print("\033[1;31m  _____                          _        _   _                 _   _ ")
+print("\033[1;33m |_   _|__  _   _ _ __ ___    __| | ___  | | | | __ _ _ __   __(_)_(_)")
+print("\033[1;31m   | |/ _ \\| | | | '__/ __|  / _` |/ _ \\ | |_| |/ _` | '_ \\ / _ \\| |  ")
+print("\033[1;33m   | | (_) | |_| | |  \\__ \\ | (_| |  __/ |  _  | (_| | | | | (_) | |  ")
+print("\033[1;31m   |_|\\___/ \\__,_|_|  |___/  \\__,_|\\___| |_| |_|\\__,_|_| |_|\\___/|_|  \033[0m")
+
 dico_scores = {}
 id_partie = 1
 liste_nbdisques_joues = []
@@ -394,27 +400,27 @@ while jouer:
     choix = 0
     while choix != 1:
 
-        print("""\nMenu principal, que voulez vous faire ?
-1: Jouer
-2: Affichage des scores (en fonction d'un nombre de disque)
-3: Affichage des scores en fonction du temps de jeu
-4: Affichage du score en fonction du temps de réflexion moyen
-5: Résoudre automatiquement 
-6: Quitter le jeu""")
+        print("""\n\033[4;33mMenu principal, que voulez vous faire ?\033[0m
+\033[1;1m1:\033[0m Jouer
+\033[1;1m2:\033[0m Affichage des scores (en fonction d'un nombre de disque)
+\033[1;1m3:\033[0m Affichage des scores en fonction du temps de jeu
+\033[1;1m4:\033[0m Affichage du score en fonction du temps de réflexion moyen
+\033[1;1m5:\033[0m Résoudre automatiquement 
+\033[1;1m6:\033[0m Quitter le jeu""")
 
         # On demande son choix (tout en gérant les potentielles erreurs de golmon)
         while choix not in [1, 2, 3, 4, 5, 6]:
             try:
-                choix = int(input("\nVotre choix (1, 2, 3, 4, 5 ou 6) ? "))
+                choix = int(input("\nVotre choix \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m ? "))
                 if choix not in [1, 2, 3, 4, 5, 6]:
-                    print("Veuillez entrer un numéro de choix correct ! (1, 2, 3, 4, 5 ou 6)")
+                    print("\033[1;91mVeuillez entrer un numéro de choix correct ! \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m")
             except:
-                print("Veuillez entrer numéro de choix correct ! (1, 2, 3, 4, 5 ou 6)")
+                print("\033[1;91mVeuillez entrer numéro de choix correct ! \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m")
             
         if choix == 6:
             jouer = False
             choix = 1               # Pour sortir de la boucle
-            print("Au revoir")
+            print("\033[30mAu revoir\033[0m")
 
         elif choix == 2:
             afficheScores(dico_scores, liste_nbdisques_joues)
@@ -434,24 +440,19 @@ while jouer:
             nbdisques = demandeNbDisques()
             plateau = init(nbdisques); dessinePlateau(nbdisques); dessineConfig(plateau, nbdisques)
             
-            input("Pressez la touche entrée pour résoudre le problème automatiquement.")
+            input("\033[3;30mPressez la touche entrée pour résoudre le problème automatiquement.\033[0m")
             resolutionAutomatique(plateau, nbdisques, solutionDeplacements(nbdisques, l_d=[]))
-            input("Pressez la touche entrée pour quitter.")
+            input("\033[3;30mPressez la touche entrée pour quitter.\033[0m")
             
             # On efface les dessins dans l'interface turtle et on sort de la boucle
             clearscreen(); speed(0); ht()
             choix = 0
-
 
         elif choix == 1:
             liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
 
             # On demande à l'utilisateur un nombre de disques supérieur ou égal à 2
             nbdisques = demandeNbDisques()
-
-            # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
-            if nbdisques not in liste_nbdisques_joues:
-                liste_nbdisques_joues.append(nbdisques)
 
             start_time = time.time()
 
@@ -465,15 +466,19 @@ while jouer:
             temps_de_jeu = time.time() - start_time
 
             if resultat[0]:                                                     # Cas de l'abandon
-                print(f"Abandon de la partie après {resultat[2] - 1} coup(s).")
+                print(f"\033[33mAbandon de la partie\033[0m après {resultat[2] - 1} coup(s).")
 
             elif resultat[3] + nbdisques < resultat[2]:                         # Cas de la défaite
-                print(f"Perdu ! Vous avez fait trop de coups (le maximum autorisé ici était {resultat[3] + nbdisques} coups).")
+                print(f"\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[3;30m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
 
             elif resultat[1]:                                                   # Cas de la victoire
-                print(f"Victoire ! Gagné en {resultat[2]} coups (le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups).")
+                print(f"\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[3;30m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups)\033[0m.")
                 nom = input("\nEntrez votre nom : ")
                 sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
+                
+                # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
+                if nbdisques not in liste_nbdisques_joues:
+                    liste_nbdisques_joues.append(nbdisques)
 
             # On efface les dessins dans l'interface turtle et on sort de la boucle
             clearscreen(); speed(0); ht()
