@@ -219,7 +219,7 @@ def boucleJeu(plateau, n):
     liste_temps_reflexion = []
 
     while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
-        print(f"\n\033[4;36mCoup numéro {nb_coup + 1} :\033[0m")
+        print(f"\n\033[4;36mCoup numéro {nb_coup + 1}\033[0m\033[36m :\033[0m")
 
         debut_temps_reflexion = time.time()
         deplacement_reflexion = jouerUnCoup(plateau, n)
@@ -297,11 +297,11 @@ def afficheScores(dico_scores, liste_nbdisques_joues):
                     tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
         # Il ne reste plus qu'a parcourir la liste des différents scores triées
-        print(f"\n\033[4;33mTableau des scores pour {nd} disques :\033[0m")
+        print(f"\n\033[4;33mTableau des scores pour {nd} disques\033[0m\033[33m :\033[0m\n")
         i = 1
         for score in tableau_scores:
             nb = str(i) + "er " if i == 1 else str(i) + "ème"
-            print(f"{nb} : {score[0]}, avec {score[2]} coups et {score[3]} secondes.")
+            print(f"{nb}: {score[0]}, avec {score[2]} coups et {score[3]} secondes.")
             i += 1
 
 def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on trie seulement en fonction du temps (comme demandé dans le PDF)
@@ -316,11 +316,11 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
                 tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
     # affichage du tableau des scores trié
-    print("\n\033[4;33mTableau des scores en fonction du temps :\033[0m")
+    print("\n\033[4;33mTableau des scores en fonction du temps\033[0m\033[33m :\033[0m\n")
     i = 1
     for score in tableau_scores:
         nb = str(i) + "er " if i == 1 else str(i) + "ème"
-        print(f"{nb} : {score[0]}, avec {score[3]} secondes.")
+        print(f"{nb}: {score[0]}, avec {score[3]} secondes.")
         i += 1
 
 def reflexionMoy(dico_scores):
@@ -355,11 +355,11 @@ def afficheRapide(reflexion_moyenne_joueur):
             if liste_reflexion_joueurs[j][1] > liste_reflexion_joueurs[j + 1][1]:
                 liste_reflexion_joueurs[j], liste_reflexion_joueurs[j + 1] = liste_reflexion_joueurs[j + 1], liste_reflexion_joueurs[j]
     
-    print("\n\033[4;33mTableau des scores en fonction de leur rapidité de réflexion :\033[0m")
+    print("\n\033[4;33mTableau des scores en fonction de leur rapidité de réflexion\033[0m\033[33m :\033[0m\n")
     i = 1
     for joueur in liste_reflexion_joueurs:
         nb = str(i) + "er " if i == 1 else str(i) + "ème"
-        print(f"{nb} : {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
+        print(f"{nb}: {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
         i += 1
 
 def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
@@ -400,9 +400,10 @@ while jouer:
     choix = 0
     while choix != 1:
 
-        print("""\n\033[4;33mMenu principal, que voulez vous faire ?\033[0m
+        print("""\n\033[4;33mMenu principal, que voulez vous faire\033[0m\033[33m ?\033[0m
+              
 \033[1;1m1:\033[0m Jouer
-\033[1;1m2:\033[0m Affichage des scores (en fonction d'un nombre de disque)
+\033[1;1m2:\033[0m Affichage des scores (en fonction du nombre de disques)
 \033[1;1m3:\033[0m Affichage des scores en fonction du temps de jeu
 \033[1;1m4:\033[0m Affichage du score en fonction du temps de réflexion moyen
 \033[1;1m5:\033[0m Résoudre automatiquement 
@@ -420,7 +421,7 @@ while jouer:
         if choix == 6:
             jouer = False
             choix = 1               # Pour sortir de la boucle
-            print("\033[30mAu revoir\033[0m")
+            print("\033[30mAu revoir !\033[0m")
 
         elif choix == 2:
             afficheScores(dico_scores, liste_nbdisques_joues)
