@@ -316,12 +316,13 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
                 tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
     # affichage du tableau des scores trié
-    print("\n\033[4;33mTableau des scores en fonction du temps\033[0m\033[33m :\033[0m\n")
-    i = 1
-    for score in tableau_scores:
-        nb = str(i) + "er " if i == 1 else str(i) + "ème"
-        print(f"{nb}: {score[0]}, avec {score[3]} secondes.")
-        i += 1
+    if tableau_scores:
+        print("\n\033[4;33mTableau des scores en fonction du temps\033[0m\033[33m :\033[0m\n")
+        i = 1
+        for score in tableau_scores:
+            nb = str(i) + "er " if i == 1 else str(i) + "ème"
+            print(f"{nb} : {score[0]}, avec {score[3]} secondes.")
+            i += 1
 
 def reflexionMoy(dico_scores):
     # On commence par créer un dictionnaire avec pour clés les noms des joueurs et pour valeurs des clés les temps de réflexion de chaque partie jouée par le joueur
@@ -355,12 +356,13 @@ def afficheRapide(reflexion_moyenne_joueur):
             if liste_reflexion_joueurs[j][1] > liste_reflexion_joueurs[j + 1][1]:
                 liste_reflexion_joueurs[j], liste_reflexion_joueurs[j + 1] = liste_reflexion_joueurs[j + 1], liste_reflexion_joueurs[j]
     
-    print("\n\033[4;33mTableau des scores en fonction de leur rapidité de réflexion\033[0m\033[33m :\033[0m\n")
-    i = 1
-    for joueur in liste_reflexion_joueurs:
-        nb = str(i) + "er " if i == 1 else str(i) + "ème"
-        print(f"{nb}: {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
-        i += 1
+    if liste_reflexion_joueurs:
+        print("\n\033[4;33mTableau des scores en fonction de leur rapidité de réflexion\033[0m\033[33m :\033[0m\n")
+        i = 1
+        for joueur in liste_reflexion_joueurs:
+            nb = str(i) + "er " if i == 1 else str(i) + "ème"
+            print(f"{nb}: {joueur[0]}, avec {joueur[1]} secondes de réflexion en moyenne.")
+            i += 1
 
 def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
     liste_deplacements = l_d
