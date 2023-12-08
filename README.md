@@ -1,4 +1,4 @@
-# Tours de Hanoï (Work in progress)
+# Tours de Hanoï
 
 Projet encadré porté sur le problème des [Tours de Hanoï](https://fr.wikipedia.org/wiki/Tours_de_Hano%C3%AF).
 
