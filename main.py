@@ -1,25 +1,25 @@
 from turtle import *
 import copy, time
 
-def init(n):
+def init(n):                                                            # On crée un plateau de jeu initial avec n disques sur le premier tour
     tour_de_depart = []
     for i in range(n, 0, -1):
         tour_de_depart.append(i)
     return [tour_de_depart, [], []]
 
 def nbDisques(plateau, numtour):
-    return len(plateau[numtour])
+    return len(plateau[numtour])                                        # Retourne le nombre de disques sur une tour donnée
 
-def disqueSup(plateau, numtour):
+def disqueSup(plateau, numtour):                                        
     if 0 <= numtour <= 2 and len(plateau[numtour]) != 0:
-        return plateau[numtour][-1]
-    return -1
+        return plateau[numtour][-1]                                     # On renvoie le numéro du disque supérieur (c'est-à-dire le plus grand) de la tour indiquée,
+    return -1                                                           # sinon on renvoie -1 comme demandé dans l'énoncé
 
-def posDisque(plateau, numdisque):
+def posDisque(plateau, numdisque):                                      
     for tour in plateau:
         for disque in tour:
             if disque == numdisque:
-                return tour
+                return tour                                             # Pour un dique donné, on renvoie la tour sur laquelle il se trouve
             
 def verifDepl(plateau, nt1, nt2):
     autorise = False
@@ -31,7 +31,7 @@ def verifVictoire(plateau, n):
     liste_valide = []
     for i in range(n, 0, -1):
         liste_valide.append(i)
-    if liste_valide == plateau[2]:
+    if liste_valide == plateau[2]:                                      # On vérifie si la liste valide correspond à la configuration de la tour de droite
         return True
     return False
 
@@ -64,14 +64,14 @@ def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rec
     # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y - largeur)
     # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)
 
-    # et ce serait UN PEU plus rapide
+    # et ce serait un peu plus rapide
 
 def dessinePlateau(n):
     # On dessine la base
-    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)     # la longueur est déterminée en fonction de n disques
+    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)     # La longueur est déterminée en fonction de n disques
     
     # On dessine les tours
-    x = 37 + (n-1)*15                               # le 37 ici sert juste à centrer la tour (qui est de largeur 6) 
+    x = 37 + (n-1)*15                               # Le 37 ici sert juste à centrer la tour (qui est de largeur 6) 
     y = (n+1)*20                                    # Rappel : les coordonnées ont pour origine le coin supérieur gauche de la base (qui a pour coordonnées (0, 0))
     largeur = 6
     longueur = (n+1)*20
@@ -85,9 +85,9 @@ def dessineDisque(nd, plateau, n):
     for i in range(len(plateau)):
         for j in range(len(plateau[i])):
             if plateau[i][j] == nd:
-                x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15     # Oui le calcul des coordonnées du disque est horrible,
-                y = 20 + j*20                                   # mais avec la puissance des math (et de mon énorme cerveau),
-                longueur = 40 + (nd-1)*30                       # on fait des trucs absolument incroyables ! (bon ok j'ai mis 30mn à faire cte ptn de fonction)
+                x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15     
+                y = 20 + j*20                                   
+                longueur = 40 + (nd-1)*30                       
                 largeur = 20                                    # La largeur est constante et de valeur 20.
                 rectangle(x, y, longueur, largeur)
 
@@ -136,23 +136,23 @@ def demandeNbDisques():
     return nbdisques
 
 def lireCoords(plateau):
-    # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible:
+    # On demande d'abord la tour de départ, tout en vérifiant qu'un déplacemement de disque depuis celle-ci est possible :
     deplacement_possible = False
     while not deplacement_possible:
         
         tour_depart = ""
         try:
-            while tour_depart not in [0, 1, 2] and tour_depart == "":                                                         # on vérifie que le numéro donné soit 0, 1 ou 2,
+            while tour_depart not in [0, 1, 2] and tour_depart == "":               # On vérifie que le numéro donné soit 0, 1 ou 2,
                 tour_depart = int(input("Quelle tour de départ \033[3;30m(0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent)\033[0m ? "))
 
-                if tour_depart == -1:               # (Gestion du cas si abandon du joueur.)
+                if tour_depart == -1:                                               # (Gestion du cas si abandon du joueur.)
                     return (tour_depart, None)
                 
                 if tour_depart == 3:
                     return (tour_depart, None)
                 
                 if tour_depart in [0, 1, 2]:
-                    while plateau[tour_depart] == []:                                                   # et que la tour choisie ne soit pas vide.
+                    while plateau[tour_depart] == []:                               # et que la tour choisie ne soit pas vide.
                         tour_depart = int(input("\033[1;91mTour vide !\033[0m Quelle tour de départ \033[3;30m(0, 1 ou 2)\033[0m ? "))
                 else:
                     print("\033[1;91mNuméro de tour invalide !\033[0m")
@@ -172,9 +172,9 @@ def lireCoords(plateau):
     tour_arrivee = ""
     while tour_arrivee == "":
         try:
-            while tour_arrivee not in [0, 1, 2]:                                                                                            # comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
+            while tour_arrivee not in [0, 1, 2]:                                                                                            # Comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
                 tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
-                if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # si c'est le cas et si la tour contient un disque,
+                if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # Si c'est le cas et si la tour contient un disque,
                     while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
                         tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
                 elif tour_arrivee not in [0, 1, 2]:
@@ -182,11 +182,11 @@ def lireCoords(plateau):
         except:
             print("\033[1;91mVeuillez entrer une valeur correcte !\033[0m \033[3;30m(nombre entier égal à 0, 1 ou 2)\033[0m")
 
-    # Il ne reste plus qu'a vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
+    # Il ne reste plus qu'à vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
     while tour_arrivee == tour_depart:
         print("\033[1;91mVotre tour d'arrivée ne peut pas être la même que la tour de départ !\033[0m")
         tour_arrivee = -1                                                                   # Si c'est le cas on redemande le numéro de la tour d'arrivée
-        while tour_arrivee not in [0, 1, 2]:                                                # (Oui j'aurais pu faire une fonction pour éviter de répéter du code)
+        while tour_arrivee not in [0, 1, 2]:                                                # (On aurait pu faire une fonction pour éviter de répéter du code)
             tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
             if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:
                 while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:
@@ -214,11 +214,11 @@ def boucleJeu(plateau, n):
     dico_coups[0] = copy.deepcopy(plateau)
 
     abandon = False
-    coups_max = 2**n - 1                                                                # On met le nombre de coups maximal au nombre de coup minimal possible
+    coups_max = 2**n - 1                                                                 # On met le nombre de coups maximal au nombre de coup minimal possible
     nb_coup = 0
     liste_temps_reflexion = []
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possible en plus au joueur
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possibles en plus au joueur
         print(f"\n\033[4;36mCoup numéro {nb_coup + 1}\033[0m\033[36m :\033[0m")
 
         debut_temps_reflexion = time.time()
@@ -231,8 +231,8 @@ def boucleJeu(plateau, n):
 
         elif choix_depart == 3:
             if len(dico_coups) > 1:                                         # Si au moins un coup a été joué,
-                dico_coups = annulerDernierCoup(plateau, n, dico_coups)     # On annule le dernier coup et on modifie le dictionnaire des coups
-                nb_coup -= 2                                                # On enlève 2 au nombre de coups pour en rajouter un par la suite donc au final décrémenter le compteur de 1
+                dico_coups = annulerDernierCoup(plateau, n, dico_coups)     # on annule le dernier coup et on modifie le dictionnaire des coups
+                nb_coup -= 2                                                # on enlève 2 au nombre de coups pour en rajouter un par la suite donc au final décrémenter le compteur de 1
             else:
                 print("\033[1;91mImpossible d'annuler le dernier coup si aucun coup n'a été joué !\033[0m")
                 nb_coup -= 1                                                # On décrémente de 1 pour ne pas augumenter au final le nombre de tours
@@ -266,7 +266,7 @@ def annulerDernierCoup(plateau, n, dico_coups):
         tour.remove(disque_a_replacer) if disque_a_replacer in tour else tour
     plateau[dernier_coup[0]].append(disque_a_replacer)                          # pour le replacer au bon endroit dans la tour où il était avant.
 
-    dessineDisque(disque_a_replacer, plateau, n)        # On le redessine au bon endroit sur l'interface tutrle,
+    dessineDisque(disque_a_replacer, plateau, n)        # On le redessine au bon endroit sur l'interface turtle,
     dico_coups.pop(len(dico_coups) - 1)                 # puis on efface le dernier coup du dictionnaire des coups
 
     return dico_coups
@@ -296,7 +296,7 @@ def afficheScores(dico_scores, liste_nbdisques_joues):
                 elif tableau_scores[j][2] == tableau_scores[j + 1][2] and tableau_scores[j][3] > tableau_scores[j + 1][3]:
                     tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
-        # Il ne reste plus qu'a parcourir la liste des différents scores triées
+        # Il ne reste plus qu'à parcourir la liste des différents scores triés
         print(f"\n\033[4;33mTableau des scores pour {nd} disques\033[0m\033[33m :\033[0m")
         i = 1
         for score in tableau_scores:
@@ -315,7 +315,7 @@ def afficheChronos(dico_scores):    # Même fonction que afficheScores mais on t
             if tableau_scores[j][3] > tableau_scores[j + 1][3]:
                 tableau_scores[j], tableau_scores[j + 1] = tableau_scores[j + 1], tableau_scores[j]
 
-    # affichage du tableau des scores trié
+    # Affichage du tableau des scores triés
     if tableau_scores:
         print("\n\033[4;33mTableau des scores en fonction du temps\033[0m\033[33m :\033[0m")
         i = 1
@@ -334,7 +334,7 @@ def reflexionMoy(dico_scores):
         else:
             temps_reflexion_joueurs[dico_scores[partie][0]] += liste_temps        # sinon on concatène la liste du temps des parties jouées par ce joueur
     
-    # Ensuite on fait un parcour simple du dictionnaire créé en affichant la moyenne des différents temps de réflexion
+    # Ensuite on fait un parcours simple du dictionnaire créé en affichant la moyenne des différents temps de réflexion
     reflexion_moyenne_joueurs = {}
     for joueur in temps_reflexion_joueurs:
         somme_temps = 0
@@ -350,7 +350,7 @@ def afficheRapide(reflexion_moyenne_joueur):
     for joueur in reflexion_moyenne_joueur:
         liste_reflexion_joueurs.append((joueur, reflexion_moyenne_joueur[joueur]))
     
-    # On trie donc par la suite la liste des couples (nom du joueur, temps de réflexion moyen) que l'on vient de génerer
+    # On trie donc par la suite la liste des couples (nom du joueur, temps de réflexion moyen) que l'on vient de générer
     for i in range(len(liste_reflexion_joueurs)):
         for j in range(0, len(liste_reflexion_joueurs)-1-i):
             if liste_reflexion_joueurs[j][1] > liste_reflexion_joueurs[j + 1][1]:
@@ -367,23 +367,23 @@ def afficheRapide(reflexion_moyenne_joueur):
 def solutionDeplacements(nbdisques, tour_depart=0, tour_milieu=1, tour_arrivee=2, l_d=[]):
     liste_deplacements = l_d
     if nbdisques > 0:
-        solutionDeplacements(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)
-        liste_deplacements.append((tour_depart, tour_arrivee))
-        solutionDeplacements(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)
+        solutionDeplacements(nbdisques - 1, tour_depart, tour_arrivee, tour_milieu, l_d)      # On va déplacer n-1 disques de la tour de départ à la tour du milieu
+        liste_deplacements.append((tour_depart, tour_arrivee))                                # puis ajouter le déplacement du disque restant de la tour de départ à la tour d'arrivée
+        solutionDeplacements(nbdisques - 1, tour_milieu, tour_depart, tour_arrivee, l_d)      # enfin, on déplace les n-1 disques de la tour du milieu à la tour d'arrivée
     return liste_deplacements
 
 def resolutionAutomatique(plateau, n, liste_deplacements):
     for deplacement in liste_deplacements:
-        disque_a_deplacer = disqueSup(plateau, deplacement[0])
-        effaceDisque(disque_a_deplacer, plateau, n)
+        disque_a_deplacer = disqueSup(plateau, deplacement[0])                                # On récupère le disque à déplacer de la tour de départ
+        effaceDisque(disque_a_deplacer, plateau, n)                                           # Ne pas oublier d'effacer le disque du plateau
         
         for tour in plateau:
-            tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour
+            tour.remove(disque_a_deplacer) if disque_a_deplacer in tour else tour             # On retire le disque de la tour de départ et on l'ajoute à la tour d'arrivée,
         plateau[deplacement[1]].append(disque_a_deplacer)
 
-        dessineDisque(disque_a_deplacer, plateau, n)
+        dessineDisque(disque_a_deplacer, plateau, n)                                          # et pour finir, on dessine le nouvel emplacement du disque sur le plateau
 
-        time.sleep(0.333)         # On ralentit l'exécution (sinon on pige R)
+        time.sleep(0.333)                                                                     # On ralentit l'exécution pour avoir le temps de voir les déplacements
 
 # PROGRAMME PRINCIPAL
 
@@ -410,7 +410,7 @@ while jouer:
 \033[1;1m5:\033[0m Résoudre automatiquement 
 \033[1;1m6:\033[0m Quitter le jeu""")
 
-    # On demande son choix (tout en gérant les potentielles erreurs de golmon)
+    # On demande son choix (tout en gérant les potentielles erreurs)
     choix = 0
     while choix not in [1, 2, 3, 4, 5, 6]:
         try:
@@ -427,7 +427,7 @@ while jouer:
 
     elif choix == 2:
         afficheScores(dico_scores, liste_nbdisques_joues)
-        choix = 0           # (permet de sortir de la boucle du menu principal)
+        choix = 0                 # (Permet de sortir de la boucle du menu principal)
 
     elif choix == 3:
         afficheChronos(dico_scores)
@@ -452,7 +452,7 @@ while jouer:
         choix = 0
 
     elif choix == 1:
-        liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disque à la prochaine partie
+        liste_coord_tours = []      # On vide la liste des coordonnées des tours pour éviter des bugs graphiques si jamais on change de nombre de disques à la prochaine partie
 
         # On demande à l'utilisateur un nombre de disques supérieur ou égal à 2
         nbdisques = demandeNbDisques()
@@ -479,7 +479,7 @@ while jouer:
             nom = input("\nEntrez votre nom : ")
             sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
             
-            # On ajoute dans la liste des numéros de disques joués le nombre de disque entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
+            # On ajoute dans la liste des numéros de disques joués le nombre de disques entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
             if nbdisques not in liste_nbdisques_joues:
                 liste_nbdisques_joues.append(nbdisques)
             
