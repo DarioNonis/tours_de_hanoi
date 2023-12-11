@@ -13,7 +13,9 @@ Il ne vous reste plus qu'à lancer le fichier `main.py`
 
 ## Rapport
  - Toutes les parties ont été implémentées (de A à F, voir le fichier [pdf](https://github.com/DarioNonis/tours_de_hanoi/blob/master/projet-inf101-hanoi.pdf)).
- - Il n'y a pas vraiment d'extensions par rapport au projet de base, si ce n'est un code très efficace (notamment avec l'interface Turtle), ainsi que l'ajout de couleurs et de différents formattages au texte affiché dans la console python pour simplifier l'UI / UX.
+
+ - Des améliorations, notamment graphiques ont étés ajoutées : En plus d'avoir un code efficace et une exécution rapide, un soin de l'UI / UX à été apporté (bien que l'interraction avec le jeu ne se fasse que dans la console python). En effet l'ajout de couleurs et de différents formattages au texte affiché dans la console python permettent à l'utilisateur de plus rapidement comprendre le programme (si il y a une erreur, si l'information est pertinente...). De plus les disques dans l'interface Turtle sont colorés (ordre des couleurs aléatoire à chaque partie) et possèdent un numéro (qui ne sera pas obstrué par la couleur du disque) qui permet à l'utilisateur d'identifier bien plus rapidement les disques et leurs taille sur le plateau de l'interface Turtle. 
+
  - Le code ne contient pas de bugs (affirmation après de **nombreux** tests), de la gestion d'erreur a également été mise en place pour éviter toute erreur par l'utilisateur
 
 ## Explications des fonctions non évidentes
