@@ -70,10 +70,12 @@ def dessinePlateau(n):
     y = (n+1)*20                                    # Rappel : les coordonnées ont pour origine le coin supérieur gauche de la base (qui a pour coordonnées (0, 0))
     largeur = 6
     longueur = (n+1)*20
+
+    global liste_coord_tours
     liste_coord_tours.append((x, y))
     for i in range(3):
         rectangle(x, y, largeur, longueur)
-        x += 30 + n*30
+        x += (n+1)*30
         liste_coord_tours.append((x, y))
 
 def dessineDisque(nd, plateau, n):
@@ -93,21 +95,13 @@ def effaceDisque(nd, plateau, n):
         for j in range(len(plateau[i])):
             if plateau[i][j] == nd:
                 # Calcul des coordonnées et de la longueur
-                x = plateau_ord_org[0] + 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15
-                y = plateau_ord_org[1] + 20 + j*20
+                x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15
+                y = 20 + j*20
                 longueur = 40 + (nd-1)*30
                 largeur = 20
 
                 # On efface le disque
-                color("white")
-                fillcolor("white")
-                begin_fill()
-                up(); goto(x, y - (largeur-1)); down()
-                goto(x, y)
-                goto(x + longueur, y)
-                goto(x + longueur, y - (largeur-1))
-                goto(x, y - (largeur-1))
-                end_fill()
+                rectangle(x, y, longueur, largeur-1, "white", "white")
 
                 # On redessine la tour
                 hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
