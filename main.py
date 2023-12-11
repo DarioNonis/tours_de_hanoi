@@ -143,7 +143,7 @@ def lireCoords(plateau):
         tour_depart = ""
         try:
             while tour_depart not in [0, 1, 2] and tour_depart == "":               # On vérifie que le numéro donné soit 0, 1 ou 2,
-                tour_depart = int(input("Quelle tour de départ \033[3;30m(0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent)\033[0m ? "))
+                tour_depart = int(input("Quelle tour de départ \033[90m(0, 1 ou 2, -1 pour abandon, 3 pour annuler le coup précédent)\033[0m ? "))
 
                 if tour_depart == -1:                                               # (Gestion du cas si abandon du joueur.)
                     return (tour_depart, None)
@@ -153,7 +153,7 @@ def lireCoords(plateau):
                 
                 if tour_depart in [0, 1, 2]:
                     while plateau[tour_depart] == []:                               # et que la tour choisie ne soit pas vide.
-                        tour_depart = int(input("\033[1;91mTour vide !\033[0m Quelle tour de départ \033[3;30m(0, 1 ou 2)\033[0m ? "))
+                        tour_depart = int(input("\033[1;91mTour vide !\033[0m Quelle tour de départ \033[90m(0, 1 ou 2)\033[0m ? "))
                 else:
                     print("\033[1;91mNuméro de tour invalide !\033[0m")
         
@@ -166,31 +166,31 @@ def lireCoords(plateau):
                 print("\033[1;91mAucun déplacement possible depuis cette tour !\033[0m Veuillez en choisir une autre.")
             
         except:
-            print("\033[1;91mVeuillez entrer une valeur correcte !\033[0m \033[3;30m(nombre entier égal à 0, 1 ou 2, -1 pour abandon)\033[0m")
+            print("\033[1;91mVeuillez entrer une valeur correcte !\033[0m \033[90m(nombre entier égal à 0, 1 ou 2, -1 pour abandon)\033[0m")
     
     # Ensuite on demande la tour d'arrivée, tout en vérifiant qu'elle soit vide ou que son disque supérieur soit inférieur au disque supérieur de la tour de départ choisie
     tour_arrivee = ""
     while tour_arrivee == "":
         try:
             while tour_arrivee not in [0, 1, 2]:                                                                                            # Comme pour la tour de départ, on vérifie que le numéro donné soit 0, 1 ou 2
-                tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
+                tour_arrivee = int(input("Quelle tour d'arrivée \033[90m(0, 1 ou 2)\033[0m ? "))
                 if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:                                                    # Si c'est le cas et si la tour contient un disque,
                     while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:    # on vérifie que celui-ci soit plus grand que le disque déplacé
-                        tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
+                        tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[90m(0, 1 ou 2)\033[0m ? "))
                 elif tour_arrivee not in [0, 1, 2]:
                     print("\033[1;91mNuméro de tour invalide !\033[0m")
         except:
-            print("\033[1;91mVeuillez entrer une valeur correcte !\033[0m \033[3;30m(nombre entier égal à 0, 1 ou 2)\033[0m")
+            print("\033[1;91mVeuillez entrer une valeur correcte !\033[0m \033[90m(nombre entier égal à 0, 1 ou 2)\033[0m")
 
     # Il ne reste plus qu'à vérifier si le numéro de la tour de départ est bien différent de la tour d'arrivée
     while tour_arrivee == tour_depart:
         print("\033[1;91mVotre tour d'arrivée ne peut pas être la même que la tour de départ !\033[0m")
         tour_arrivee = -1                                                                   # Si c'est le cas on redemande le numéro de la tour d'arrivée
         while tour_arrivee not in [0, 1, 2]:                                                # (On aurait pu faire une fonction pour éviter de répéter du code)
-            tour_arrivee = int(input("Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
+            tour_arrivee = int(input("Quelle tour d'arrivée \033[90m(0, 1 ou 2)\033[0m ? "))
             if tour_arrivee in [0, 1, 2] and disqueSup(plateau, tour_arrivee) != -1:
                 while disqueSup(plateau, tour_arrivee) < disqueSup(plateau, tour_depart) and disqueSup(plateau, tour_arrivee) != -1:
-                    tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[3;30m(0, 1 ou 2)\033[0m ? "))
+                    tour_arrivee = int(input("\033[1;91mDéplacement interdit !\033[0m Quelle tour d'arrivée \033[90m(0, 1 ou 2)\033[0m ? "))
         
     return (tour_depart, tour_arrivee)
 
@@ -414,11 +414,11 @@ while jouer:
     choix = 0
     while choix not in [1, 2, 3, 4, 5, 6]:
         try:
-            choix = int(input("\nVotre choix \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m ? "))
+            choix = int(input("\nVotre choix \033[90m(1, 2, 3, 4, 5 ou 6)\033[0m ? "))
             if choix not in [1, 2, 3, 4, 5, 6]:
-                print("\033[1;91mVeuillez entrer un numéro de choix correct !\033[0m \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m")
+                print("\033[1;91mVeuillez entrer un numéro de choix correct !\033[0m \033[90m(1, 2, 3, 4, 5 ou 6)\033[0m")
         except:
-            print("\033[1;91mVeuillez entrer numéro de choix correct !\033[0m \033[3;30m(1, 2, 3, 4, 5 ou 6)\033[0m")
+            print("\033[1;91mVeuillez entrer numéro de choix correct !\033[0m \033[90m(1, 2, 3, 4, 5 ou 6)\033[0m")
         
     if choix == 6:
         jouer = False
@@ -443,9 +443,9 @@ while jouer:
         nbdisques = demandeNbDisques()
         plateau = init(nbdisques); dessinePlateau(nbdisques); dessineConfig(plateau, nbdisques)
         
-        input("\033[3;30mPressez la touche entrée pour résoudre le problème automatiquement.\033[0m")
+        input("\033[90mPressez la touche entrée pour résoudre le problème automatiquement.\033[0m")
         resolutionAutomatique(plateau, nbdisques, solutionDeplacements(nbdisques, l_d=[]))
-        input("\033[3;30mPressez la touche entrée pour quitter.\033[0m")
+        input("\033[90mPressez la touche entrée pour quitter.\033[0m")
         
         # On efface les dessins dans l'interface turtle et on sort de la boucle
         clearscreen(); speed(0); ht()
@@ -472,10 +472,10 @@ while jouer:
             print(f"\033[33mAbandon de la partie\033[0m après {resultat[2] - 1} coup(s).")
 
         elif resultat[3] + nbdisques < resultat[2]:                         # Cas de la défaite
-            print(f"\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[3;30m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
+            print(f"\n\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[90m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
 
         elif resultat[1]:                                                   # Cas de la victoire
-            print(f"\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[3;30m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups)\033[0m.")
+            print(f"\n\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[90m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups)\033[0m.")
             nom = input("\nEntrez votre nom : ")
             sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
             
