@@ -1,4 +1,5 @@
 from turtle import *
+from random import shuffle
 import copy, time
 
 def init(n):                                                            # On crée un plateau de jeu initial avec n disques sur le premier tour
@@ -40,6 +41,8 @@ speed(0)
 ht()
 liste_coord_tours = []
 title("Tours de Hanoï")
+liste_couleurs = liste_couleurs = ["gold", "orange red", "cornflower blue", "dark khaki", "lavender", "lime green", "light salmon", "slate blue", "chocolate", "hot pink", "dark turquoise", "violet", "medium purple", "deep sky blue"]
+shuffle(liste_couleurs)
 
 def rectangle(x, y, longueur, largeur, couleur_contour="black", couleur_interieur="white", numero=0):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
     up(); goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y); down()
@@ -74,6 +77,7 @@ def dessinePlateau(n):
         liste_coord_tours.append((x, y))
 
 def dessineDisque(nd, plateau, n):
+    global liste_couleurs
     for i in range(len(plateau)):
         for j in range(len(plateau[i])):
             if plateau[i][j] == nd:
@@ -81,7 +85,8 @@ def dessineDisque(nd, plateau, n):
                 y = 20 + j*20                                   
                 longueur = 40 + (nd-1)*30                       
                 largeur = 20                                    # La largeur est constante et de valeur 20.
-                rectangle(x, y, longueur, largeur, numero=nd)
+                # print((n-1), len(liste_couleurs))
+                rectangle(x, y, longueur, largeur, numero=nd, couleur_interieur=liste_couleurs[(nd-1) % len(liste_couleurs)])
 
 def effaceDisque(nd, plateau, n):
     for i in range(len(plateau)):
