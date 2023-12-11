@@ -2,25 +2,25 @@ from turtle import *
 from random import shuffle
 import copy, time
 
-def init(n):                                                            # On crée un plateau de jeu initial avec n disques sur le premier tour
+def init(n):
     tour_de_depart = []
-    for i in range(n, 0, -1):
+    for i in range(n, 0, -1):           # Range avec un pas de -1 pour placer le plus petit disque (numéro 1) à la fin de la liste de la tour
         tour_de_depart.append(i)
     return [tour_de_depart, [], []]
 
 def nbDisques(plateau, numtour):
-    return len(plateau[numtour])                                        # Retourne le nombre de disques sur une tour donnée
+    return len(plateau[numtour])                        # Retourne le nombre de disques sur une tour donnée
 
 def disqueSup(plateau, numtour):                                        
     if 0 <= numtour <= 2 and len(plateau[numtour]) != 0:
-        return plateau[numtour][-1]                                     # On renvoie le numéro du disque supérieur (c'est-à-dire le plus grand) de la tour indiquée,
-    return -1                                                           # sinon on renvoie -1 comme demandé dans l'énoncé
+        return plateau[numtour][-1]                         # On renvoie le numéro du disque supérieur (le dernier de la liste) de la tour indiquée,
+    return -1                                               # sinon on renvoie -1 comme demandé dans l'énoncé
 
 def posDisque(plateau, numdisque):                                      
-    for tour in plateau:
-        for disque in tour:
-            if disque == numdisque:
-                return tour                                             # Pour un dique donné, on renvoie la tour sur laquelle il se trouve
+    for i in range(len(plateau)):                       # Dans chaque tour,
+        for j in range(len(plateau[i])):                # on cherche si le disque s'y trouve.
+            if plateau[i][j] == numdisque:              # Et si on le trouve,
+                return i                                # on renvoie l'indice de la tour qui le contient
             
 def verifDepl(plateau, nt1, nt2):
     autorise = False
@@ -30,36 +30,46 @@ def verifDepl(plateau, nt1, nt2):
 
 def verifVictoire(plateau, n):
     liste_valide = []
-    for i in range(n, 0, -1):
+    for i in range(n, 0, -1):           # On construit la tour d'arrivée comme elle est censée être une fois le jeu fini
         liste_valide.append(i)
-    if liste_valide == plateau[2]:                                      # On vérifie si la liste valide correspond à la configuration de la tour de droite
+    if liste_valide == plateau[2]:      # Puis on vérifie si elle correspond à la configuration de la tour de droite du plateau
         return True
     return False
 
-plateau_ord_org = (-300, -200)          # Coordonnées à l'origine de la base du plateau (coin supérieur gauche)
+# PARAMÈTRES
+plateau_ord_org = (-300, -200)          # Coordonnées à l'origine de la base du plateau (coin supérieur gauche), peut évidemment être modifié.
 speed(0)
-ht()
-liste_coord_tours = []
+ht()                                    # Permet de cacher le curseur de turtle
+liste_coord_tours = []                  # Stockage des coordonnées des tours pour ne pas avoir à les recalculer afin de plus tard les redessiner plus facilement
 title("Tours de Hanoï")
 liste_couleurs = liste_couleurs = ["gold", "orange red", "cornflower blue", "dark khaki", "lavender", "lime green", "light salmon", "slate blue", "chocolate", "hot pink", "dark turquoise", "violet", "medium purple", "deep sky blue"]
 shuffle(liste_couleurs)
 
 def rectangle(x, y, longueur, largeur, couleur_contour="black", couleur_interieur="white", numero=0):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
+    # On se place aux bonnes coordonnées et on règle les couleurs
+    global plateau_ord_org
     up(); goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y); down()
-    color(couleur_contour)
-    fillcolor(couleur_interieur)                                # On remplit le rectangle de blanc pour éviter de devoir
-    begin_fill()                                                # effacer la tour qui se trouve derrière.
-    tracer(0, 0)
+    color(couleur_contour); fillcolor(couleur_interieur)                    # On remplit le rectangle de blanc pour éviter de devoir effacer la tour qui se trouve derrière.
+    tracer(0, 0)                                                            # Permet de "figer" l'interface turtle
+
+    # Ensuite on trace le rectange 
+    begin_fill()
     for i in range(2):
         forward(longueur)
         right(90)
         forward(largeur)
         right(90)
     end_fill()
+    
+    # On dessine le numéro du disque si passé en paramètres
     if numero != 0:
-        up(); goto(plateau_ord_org[0] + x + longueur / 2 - 4, plateau_ord_org[1] + y - largeur); down()
+        up()
+        x = plateau_ord_org[0] + x + longueur / 2 - 4 if numero < 10 else plateau_ord_org[0] + x + longueur / 2 - 9     # Calcul de l'abscisse du numéro du disque,
+        goto(x, plateau_ord_org[1] + y - largeur)                                                                       # avec un petit décalage supplémentaire si numéro à deux chiffres (numéro > 10).
+        down()
         write(numero, font=("Verdana", 13, "normal"))
-    update()
+    
+    update()                                                                # On défige l'interface turtle : le déplacement est instantané et on ne remarque pas les effacements et traçages des différents disques
 
 def dessinePlateau(n):
     # On dessine la base
@@ -83,18 +93,20 @@ def dessineDisque(nd, plateau, n):
     for i in range(len(plateau)):
         for j in range(len(plateau[i])):
             if plateau[i][j] == nd:
+                # Calcul des coordonnées ainsi que longueur / largeur
                 x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15     
                 y = 20 + j*20                                   
                 longueur = 40 + (nd-1)*30                       
                 largeur = 20                                    # La largeur est constante et de valeur 20.
-                # print((n-1), len(liste_couleurs))
+                
+                # On dessine ensuite le disque
                 rectangle(x, y, longueur, largeur, numero=nd, couleur_interieur=liste_couleurs[(nd-1) % len(liste_couleurs)])
 
 def effaceDisque(nd, plateau, n):
     for i in range(len(plateau)):
         for j in range(len(plateau[i])):
             if plateau[i][j] == nd:
-                # Calcul des coordonnées et de la longueur
+                # Calcul des coordonnées ainsi que longueur / largeur
                 x = 20 + i*(40 + (n-1)*30 + 20) + (n-nd)*15
                 y = 20 + j*20
                 longueur = 40 + (nd-1)*30
@@ -115,11 +127,10 @@ def dessineConfig(plateau, n):
 def effaceTout(plateau, n):
     for i in range(n+1):
         effaceDisque(i, plateau, n)
-
         for tour in plateau:                        # On oublie pas de supprimer le disque i de son emplacement dans la configuration du plateau
             tour.remove(i) if i in tour else tour
 
-def demandeNbDisques():
+def demandeNbDisques():             # Fonction qui demmande un nombre de disque >= 1 à l'utilisateur jusqu'à ce qu'il rentre une valeur correcte.
     nbdisques = 0
     while nbdisques < 1:
         try:
@@ -127,7 +138,7 @@ def demandeNbDisques():
             if nbdisques < 1:
                 print("\033[1;91mVeuillez entrer un nombre entier supérieur ou égal à 1 !\033[0m")
         except:
-            print("\033[1;91mVeuillez entrer une valeur correcte (nombre entier supérieur ou égal à 1) !\033[0m")
+            print("\033[1;91mVeuillez entrer une valeur correcte\033[90m (nombre entier supérieur ou égal à 1) !\033[0m")
     return nbdisques
 
 def lireCoords(plateau):
@@ -192,7 +203,7 @@ def lireCoords(plateau):
 def jouerUnCoup(plateau, n):
     reflexion_start = time.time()
     deplacement = lireCoords(plateau)
-    temps_de_reflexion = time.time() - reflexion_start
+    temps_de_reflexion = time.time() - reflexion_start              # On calcule le temps de réflexion en secondes à l'aide du timestamp
     disque_a_deplacer = disqueSup(plateau, deplacement[0])
 
     if deplacement[0] != -1 and deplacement[0] != 3:
@@ -209,14 +220,13 @@ def boucleJeu(plateau, n):
     dico_coups[0] = copy.deepcopy(plateau)
 
     abandon = False
-    coups_max = 2**n - 1                                                                 # On met le nombre de coups maximal au nombre de coup minimal possible
-    nb_coup = 0
+    coups_max = 2**n - 1 + n                                                            # On met le nombre de coups maximal au nombre de coup minimal possible,
+    nb_coup = 0                                                                         # en laissant une marge d'erreur de n (nombre de disques) coups possibles en plus au joueur
     liste_temps_reflexion = []
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n > nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possibles en plus au joueur
+    while not verifVictoire(plateau, n) and not abandon and coups_max> nb_coup:
         print(f"\n\033[4;36mCoup numéro {nb_coup + 1}\033[0m\033[36m :\033[0m")
 
-        debut_temps_reflexion = time.time()
         deplacement_reflexion = jouerUnCoup(plateau, n)
         choix_depart = deplacement_reflexion[0]
         liste_temps_reflexion.append(round(deplacement_reflexion[1], 1))
