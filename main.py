@@ -41,12 +41,10 @@ ht()
 liste_coord_tours = []
 title("Tours de Hanoï")
 
-def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
-    up()
-    goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)        # Coordonnées du point supérieur gauche
-    down()
-    color(couleur)
-    fillcolor("white")                                          # On remplit le rectangle de blanc pour éviter de devoir
+def rectangle(x, y, longueur, largeur, couleur_contour="black", couleur_interieur="white", numero=0):        # Départ du rectangle du coin supérieur gauche ! (puis traçage dans le sens horaire)
+    up(); goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y); down()
+    color(couleur_contour)
+    fillcolor(couleur_interieur)                                # On remplit le rectangle de blanc pour éviter de devoir
     begin_fill()                                                # effacer la tour qui se trouve derrière.
     tracer(0, 0)
     for i in range(2):
@@ -55,20 +53,14 @@ def rectangle(x, y, longueur, largeur, couleur="black"):        # Départ du rec
         forward(largeur)
         right(90)
     end_fill()
+    if numero != 0:
+        up(); goto(plateau_ord_org[0] + x + longueur / 2 - 4, plateau_ord_org[1] + y - largeur); down()
+        write(numero, font=("Verdana", 13, "normal"))
     update()
-
-    # La boucle pourrait être remplacée par :
-
-    # goto(plateau_ord_org[0] + x + longueur, plateau_ord_org[1] + y)
-    # goto(plateau_ord_org[0] + x + longueur, plateau_ord_org[1] + y - largeur)
-    # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y - largeur)
-    # goto(plateau_ord_org[0] + x, plateau_ord_org[1] + y)
-
-    # et ce serait un peu plus rapide
 
 def dessinePlateau(n):
     # On dessine la base
-    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20)     # La longueur est déterminée en fonction de n disques
+    rectangle(0, 0, 80 + 3*(40 + (n-1)*30), 20, couleur_interieur="lightgrey")     # La longueur est déterminée en fonction de n disques
     
     # On dessine les tours
     x = 37 + (n-1)*15                               # Le 37 ici sert juste à centrer la tour (qui est de largeur 6) 
@@ -89,7 +81,7 @@ def dessineDisque(nd, plateau, n):
                 y = 20 + j*20                                   
                 longueur = 40 + (nd-1)*30                       
                 largeur = 20                                    # La largeur est constante et de valeur 20.
-                rectangle(x, y, longueur, largeur)
+                rectangle(x, y, longueur, largeur, numero=nd)
 
 def effaceDisque(nd, plateau, n):
     for i in range(len(plateau)):
@@ -103,10 +95,14 @@ def effaceDisque(nd, plateau, n):
 
                 # On efface le disque
                 color("white")
+                fillcolor("white")
+                begin_fill()
                 up(); goto(x, y - (largeur-1)); down()
                 goto(x, y)
                 goto(x + longueur, y)
-                goto(x + longueur, y - (largeur))
+                goto(x + longueur, y - (largeur-1))
+                goto(x, y - (largeur-1))
+                end_fill()
 
                 # On redessine la tour
                 hauteur_tour = 20 + (n-nbDisques(plateau, i)+1)*20
@@ -126,13 +122,13 @@ def effaceTout(plateau, n):
 
 def demandeNbDisques():
     nbdisques = 0
-    while nbdisques < 2:
+    while nbdisques < 1:
         try:
             nbdisques = int(input("\nCombien de disques souhaitez-vous ? : "))
-            if nbdisques < 2:
-                print("\033[1;91mVeuillez entrer un nombre entier égal ou supérieur à 2 !\033[0m")
+            if nbdisques < 1:
+                print("\033[1;91mVeuillez entrer un nombre entier supérieur ou égal à 1 !\033[0m")
         except:
-            print("\033[1;91mVeuillez entrer une valeur correcte (nombre entier égal ou supérieur à 2) !\033[0m")
+            print("\033[1;91mVeuillez entrer une valeur correcte (nombre entier supérieur ou égal à 1) !\033[0m")
     return nbdisques
 
 def lireCoords(plateau):
@@ -469,7 +465,7 @@ while jouer:
         temps_de_jeu = time.time() - start_time
 
         if resultat[0]:                                                     # Cas de l'abandon
-            print(f"\033[33mAbandon de la partie\033[0m après {resultat[2] - 1} coup(s).")
+            print(f"\n\033[33mAbandon de la partie\033[0m après {resultat[2] - 1} coup(s).")
 
         elif resultat[3] + nbdisques < resultat[2]:                         # Cas de la défaite
             print(f"\n\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[90m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
