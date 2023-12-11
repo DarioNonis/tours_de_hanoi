@@ -219,7 +219,7 @@ def boucleJeu(plateau, n):
     nb_coup = 0
     liste_temps_reflexion = []
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max + n >= nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possibles en plus au joueur
+    while not verifVictoire(plateau, n) and not abandon and coups_max + n > nb_coup:    # Boucle principale du jeu, on laisse une marge d'erreur de n coups possibles en plus au joueur
         print(f"\n\033[4;36mCoup numéro {nb_coup + 1}\033[0m\033[36m :\033[0m")
 
         debut_temps_reflexion = time.time()
@@ -472,12 +472,18 @@ while jouer:
         if resultat[0]:                                                     # Cas de l'abandon
             print(f"\n\033[33mAbandon de la partie\033[0m après {resultat[2] - 1} coup(s).")
 
-        elif resultat[3] + nbdisques < resultat[2]:                         # Cas de la défaite
+        elif resultat[3] + nbdisques <= resultat[2]:                         # Cas de la défaite
             print(f"\n\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[90m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
 
         elif resultat[1]:                                                   # Cas de la victoire
             print(f"\n\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[90m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups)\033[0m.")
+
+            # On demande ensuite son nom tout en vérifiant que le nom entré ne soit pas vide (même si ca ne crée pas de bug de rentrer un nom vide)
             nom = input("\nEntrez votre nom : ")
+            while len(nom) == 0:
+                nom = input("\033[1;91mVeuillez ne pas entrer de nom vide !\033[0m Entrez votre nom : ")
+
+            # On sauvegarde son nom dans le dictionnaire des scores
             sauvScore(dico_scores, id_partie, nom, nbdisques, resultat[2], round(temps_de_jeu, 1), resultat[4])
             
             # On ajoute dans la liste des numéros de disques joués le nombre de disques entré par l'utilisateur si ce nombre n'est pas déjà dans la liste
@@ -490,3 +496,5 @@ while jouer:
         # On efface les dessins dans l'interface turtle et on sort de la boucle
         clearscreen(); speed(0); ht()
         choix = 0
+    
+    shuffle(liste_couleurs)
