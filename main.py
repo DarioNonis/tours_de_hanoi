@@ -224,7 +224,7 @@ def boucleJeu(plateau, n):
     nb_coup = 0                                                                         # en laissant une marge d'erreur de n (nombre de disques) coups possibles en plus au joueur
     liste_temps_reflexion = []
 
-    while not verifVictoire(plateau, n) and not abandon and coups_max> nb_coup:
+    while not verifVictoire(plateau, n) and not abandon and coups_max > nb_coup:
         print(f"\n\033[4;36mCoup numéro {nb_coup + 1}\033[0m\033[36m :\033[0m")
 
         deplacement_reflexion = jouerUnCoup(plateau, n)
@@ -480,7 +480,7 @@ while jouer:
             print(f"\n\033[1;91mPerdu !\033[0m Vous avez fait trop de coups \033[90m(le maximum autorisé ici était {resultat[3] + nbdisques} coups).\033[0m")
 
         elif resultat[1]:                                                   # Cas de la victoire
-            print(f"\n\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[90m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3]} coups)\033[0m.")
+            print(f"\n\033[1;92mVictoire !\033[0m Gagné en {resultat[2]} coups \033[90m(le minimum de coups possibles pour {nbdisques} disques étant {resultat[3] - nbdisques} coups)\033[0m.")
 
             # On demande ensuite son nom tout en vérifiant que le nom entré ne soit pas vide (même si ca ne crée pas de bug de rentrer un nom vide)
             nom = input("\nEntrez votre nom : ")
